@@ -19,6 +19,7 @@ package com.google.android.apps.forscience.ble;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.os.ParcelUuid;
 
 import com.google.android.apps.forscience.whistlepunk.AppSingleton;
 import com.google.android.apps.forscience.whistlepunk.sensors.BleServiceSpec;
@@ -57,7 +58,7 @@ import java.util.concurrent.Executor;
     }
 
     @Override
-    public void onStartScanning() {
+    public void onStartScanning(ParcelUuid[] serviceUuid) {
         // KitKat can't handle 128bit UUIDs, so ask for all devices.
         getBluetoothAdapter().startLeScan(mCallback);
     }

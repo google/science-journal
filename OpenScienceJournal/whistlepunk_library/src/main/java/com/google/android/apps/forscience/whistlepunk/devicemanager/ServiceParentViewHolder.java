@@ -35,6 +35,7 @@ import com.google.android.apps.forscience.whistlepunk.ColorUtils;
 import com.google.android.apps.forscience.whistlepunk.R;
 import com.google.android.apps.forscience.whistlepunk.ToggleArrow;
 import com.google.android.apps.forscience.whistlepunk.metadata.BleSensorSpec;
+import com.google.android.apps.forscience.whistlepunk.metadata.MkrSciBleDeviceSpec;
 import com.google.common.base.Supplier;
 
 public class ServiceParentViewHolder extends OffsetParentViewHolder {
@@ -63,7 +64,7 @@ public class ServiceParentViewHolder extends OffsetParentViewHolder {
         mNameView.setText(name);
 
         Drawable icon = item.getDeviceIcon(context);
-        if (item.getProviderId().equals(BleSensorSpec.TYPE)) {
+        if (item.getProviderId().equals(BleSensorSpec.TYPE) || item.getProviderId().equals(MkrSciBleDeviceSpec.TYPE)) {
             icon = ColorUtils.colorDrawable(mIcon.getContext(), icon, R.color.color_accent);
         }
         mIcon.setImageDrawable(icon);

@@ -145,7 +145,11 @@ public class ExportService extends Service {
     public static void cleanOldFiles(Context context) {
         Intent intent = new Intent(context, ExportService.class);
         intent.setAction(ACTION_CLEAN_OLD_FILES);
-        context.startService(intent);
+        try {
+            context.startService(intent);
+        } catch (Throwable ignored) {
+            // app in background
+        }
     }
 
 

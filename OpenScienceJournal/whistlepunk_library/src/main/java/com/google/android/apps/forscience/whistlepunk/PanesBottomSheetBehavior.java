@@ -48,11 +48,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
 
 import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
+
 /**
  * An interaction behavior plugin for a child view of {@link CoordinatorLayout} to make it work as
  * a bottom sheet that has a mid-height stop, STATE_MIDDLE.
  * This bottom sheet behavior also does not include a STATE_HIDDEN, unlike the Android version.
- *
+ * <p>
  * Based on https://android.googlesource.com/platform/frameworks/support/+/master/design/src/android/support/design/widget/BottomSheetBehavior.java
  */
 public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.Behavior<V> {
@@ -72,6 +73,7 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
          *                    {@link #STATE_COLLAPSED}, or {@link #STATE_MIDDLE}.
          */
         public abstract void onStateChanged(@NonNull View bottomSheet, @State int newState);
+
         /**
          * Called when the bottom sheet is being dragged.
          *
@@ -83,6 +85,7 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
          */
         public abstract void onSlide(@NonNull View bottomSheet, float slideOffset);
     }
+
     /**
      * The bottom sheet is dragging.
      */
@@ -105,11 +108,15 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
      */
     public static final int STATE_MIDDLE = 5;
 
-    /** @hide */
+    /**
+     * @hide
+     */
     @RestrictTo(LIBRARY_GROUP)
     @IntDef({STATE_EXPANDED, STATE_COLLAPSED, STATE_DRAGGING, STATE_SETTLING, STATE_MIDDLE})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface State {}
+    public @interface State {
+    }
+
     /**
      * Peek at the 16:9 ratio keyline of its parent.
      *
@@ -138,11 +145,13 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
     int mActivePointerId;
     private int mInitialY;
     boolean mTouchingScrollingChild;
+
     /**
      * Default constructor for instantiating BottomSheetBehaviors.
      */
     public PanesBottomSheetBehavior() {
     }
+
     /**
      * Default constructor for inflating BottomSheetBehaviors from layout.
      *
@@ -166,10 +175,12 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
         ViewConfiguration configuration = ViewConfiguration.get(context);
         mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
     }
+
     @Override
     public Parcelable onSaveInstanceState(CoordinatorLayout parent, V child) {
         return new SavedState(super.onSaveInstanceState(parent, child), mState);
     }
+
     @Override
     public void onRestoreInstanceState(CoordinatorLayout parent, V child, Parcelable state) {
         SavedState ss = (SavedState) state;
@@ -311,7 +322,9 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
         if (mState == STATE_DRAGGING && action == MotionEvent.ACTION_DOWN) {
             return true;
         }
-        mViewDragHelper.processTouchEvent(event);
+        if (mViewDragHelper != null) {
+            mViewDragHelper.processTouchEvent(event);
+        }
         // Record the velocity
         if (action == MotionEvent.ACTION_DOWN) {
             reset();
@@ -329,16 +342,18 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
         }
         return !mIgnoreEvents;
     }
+
     @Override
     public boolean onStartNestedScroll(CoordinatorLayout coordinatorLayout, V child,
-            View directTargetChild, View target, int nestedScrollAxes) {
+                                       View directTargetChild, View target, int nestedScrollAxes) {
         mLastNestedScrollDy = 0;
         mNestedScrolled = false;
         return (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
     }
+
     @Override
     public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, V child, View target, int dx,
-            int dy, int[] consumed) {
+                                  int dy, int[] consumed) {
         View scrollingChild = mNestedScrollingChildRef.get();
         if (target != scrollingChild) {
             return;
@@ -372,6 +387,7 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
         mLastNestedScrollDy = dy;
         mNestedScrolled = true;
     }
+
     @Override
     public void onStopNestedScroll(CoordinatorLayout coordinatorLayout, V child, View target) {
         int top = child.getTop();
@@ -419,14 +435,16 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
         }
         mNestedScrolled = false;
     }
+
     @Override
     public boolean onNestedPreFling(CoordinatorLayout coordinatorLayout, V child, View target,
-            float velocityX, float velocityY) {
+                                    float velocityX, float velocityY) {
         return target == mNestedScrollingChildRef.get() &&
                 (mState != STATE_EXPANDED ||
                         super.onNestedPreFling(coordinatorLayout, child, target,
                                 velocityX, velocityY));
     }
+
     /**
      * Sets the height of the bottom sheet when it is collapsed.
      *
@@ -455,16 +473,18 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
             }
         }
     }
+
     /**
      * Gets the height of the bottom sheet when it is collapsed.
      *
      * @return The height of the collapsed bottom sheet in pixels, or {@link #PEEK_HEIGHT_AUTO}
-     *         if the sheet is configured to peek automatically at 16:9 ratio keyline
+     * if the sheet is configured to peek automatically at 16:9 ratio keyline
      * @attr ref android.support.design.R.styleable#BottomSheetBehavior_Layout_behavior_peekHeight
      */
     public final int getPeekHeight() {
         return mPeekHeightAuto ? PEEK_HEIGHT_AUTO : mPeekHeight;
     }
+
     /**
      * Sets whether this bottom sheet should skip the collapsed state when it is being hidden
      * after it is expanded once. Setting this to true has no effect unless the sheet is hideable.
@@ -475,6 +495,7 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
     public void setSkipCollapsed(boolean skipCollapsed) {
         mSkipCollapsed = skipCollapsed;
     }
+
     /**
      * Sets whether this bottom sheet should skip the collapsed state when it is being hidden
      * after it is expanded once.
@@ -485,6 +506,7 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
     public boolean getSkipCollapsed() {
         return mSkipCollapsed;
     }
+
     /**
      * Sets a callback to be notified of bottom sheet events.
      *
@@ -493,6 +515,7 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
     public void setBottomSheetCallback(BottomSheetCallback callback) {
         mCallback = callback;
     }
+
     /**
      * Sets the state of the bottom sheet. The bottom sheet will transition to that state with
      * animation.
@@ -528,6 +551,7 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
             startSettlingAnimation(child, state);
         }
     }
+
     /**
      * Gets the current state of the bottom sheet.
      *
@@ -538,6 +562,7 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
     public final int getState() {
         return mState;
     }
+
     void setStateInternal(@State int state) {
         if (mState == state) {
             return;
@@ -548,6 +573,7 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
             mCallback.onStateChanged(bottomSheet, state);
         }
     }
+
     private void reset() {
         mActivePointerId = ViewDragHelper.INVALID_POINTER;
         if (mVelocityTracker != null) {
@@ -555,6 +581,7 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
             mVelocityTracker = null;
         }
     }
+
     @VisibleForTesting
     View findScrollingChild(View view) {
         if (ViewCompat.isNestedScrollingEnabled(view)) {
@@ -571,10 +598,12 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
         }
         return null;
     }
+
     private float getYVelocity() {
         mVelocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
         return VelocityTrackerCompat.getYVelocity(mVelocityTracker, mActivePointerId);
     }
+
     void startSettlingAnimation(View child, int state) {
         int top;
         if (state == STATE_COLLAPSED) {
@@ -592,6 +621,7 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
             ViewCompat.postOnAnimation(child, new SettleRunnable(child, state));
         }
     }
+
     private final ViewDragHelper.Callback mDragCallback = new ViewDragHelper.Callback() {
         @Override
         public boolean tryCaptureView(View child, int pointerId) {
@@ -612,16 +642,19 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
             }
             return mViewRef != null && mViewRef.get() == child;
         }
+
         @Override
         public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
             dispatchOnSlide(top);
         }
+
         @Override
         public void onViewDragStateChanged(int state) {
             if (state == ViewDragHelper.STATE_DRAGGING) {
                 setStateInternal(STATE_DRAGGING);
             }
         }
+
         @Override
         public void onViewReleased(View releasedChild, float xvel, float yvel) {
             int top;
@@ -630,7 +663,7 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
             if (yvel < 0) { // Moving up
                 // Adjusted for PanesBottomSheetBehavior to have 1/3 or less of the distance stop at
                 // the middle, and >1/3 of the distance go up to expanded.
-                if (currentTop < halfOffset() * 4/3) {
+                if (currentTop < halfOffset() * 4 / 3) {
                     top = mMinOffset;
                     targetState = STATE_EXPANDED;
                 } else {
@@ -669,23 +702,28 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
                 setStateInternal(targetState);
             }
         }
+
         @Override
         public int clampViewPositionVertical(View child, int top, int dy) {
             return constrain(top, mMinOffset, mMaxOffset);
         }
+
         @Override
         public int clampViewPositionHorizontal(View child, int left, int dx) {
             return child.getLeft();
         }
+
         @Override
         public int getViewVerticalDragRange(View child) {
             return mMaxOffset - mMinOffset;
         }
+
         // From android.util.MathUtils
         private int constrain(int amount, int low, int high) {
             return amount < low ? low : (amount > high ? high : amount);
         }
     };
+
     void dispatchOnSlide(int top) {
         View bottomSheet = mViewRef.get();
         if (bottomSheet != null && mCallback != null) {
@@ -698,18 +736,22 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
             }
         }
     }
+
     @VisibleForTesting
     int getPeekHeightMin() {
         return mPeekHeightMin;
     }
+
     private class SettleRunnable implements Runnable {
         private final View mView;
         @State
         private final int mTargetState;
+
         SettleRunnable(View view, @State int targetState) {
             mView = view;
             mTargetState = targetState;
         }
+
         @Override
         public void run() {
             if (mViewDragHelper != null && mViewDragHelper.continueSettling(true)) {
@@ -719,32 +761,39 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
             }
         }
     }
+
     protected static class SavedState extends AbsSavedState {
         @State
         final int state;
+
         public SavedState(Parcel source) {
             this(source, null);
         }
+
         public SavedState(Parcel source, ClassLoader loader) {
             super(source, loader);
             //noinspection ResourceType
             state = source.readInt();
         }
+
         public SavedState(Parcelable superState, @State int state) {
             super(superState);
             this.state = state;
         }
+
         @Override
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
             out.writeInt(state);
         }
+
         public static final Creator<SavedState> CREATOR = ParcelableCompat.newCreator(
                 new ParcelableCompatCreatorCallbacks<SavedState>() {
                     @Override
                     public SavedState createFromParcel(Parcel in, ClassLoader loader) {
                         return new SavedState(in, loader);
                     }
+
                     @Override
                     public SavedState[] newArray(int size) {
                         return new SavedState[size];
@@ -758,6 +807,7 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
     private int halfOffset() {
         return (mMaxOffset - mMinOffset) / 2;
     }
+
     /**
      * A utility function to get the {@link PanesBottomSheetBehavior} associated with the {@code view}.
      *
@@ -778,6 +828,7 @@ public class PanesBottomSheetBehavior<V extends View> extends CoordinatorLayout.
         }
         return (PanesBottomSheetBehavior<V>) behavior;
     }
+
     public String getDrawerStateForLogging() {
         switch (mState) {
             case PanesBottomSheetBehavior.STATE_COLLAPSED:

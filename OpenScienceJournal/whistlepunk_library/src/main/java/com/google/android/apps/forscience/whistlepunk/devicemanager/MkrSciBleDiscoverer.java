@@ -23,46 +23,44 @@ import android.os.ParcelUuid;
 import android.support.annotation.VisibleForTesting;
 
 import com.google.android.apps.forscience.ble.DeviceDiscoverer;
+import com.google.android.apps.forscience.ble.MkrSciBleManager;
 import com.google.android.apps.forscience.javalib.FailureListener;
 import com.google.android.apps.forscience.whistlepunk.PermissionUtils;
 import com.google.android.apps.forscience.whistlepunk.R;
 import com.google.android.apps.forscience.whistlepunk.SensorProvider;
 import com.google.android.apps.forscience.whistlepunk.api.scalarinput.InputDeviceSpec;
 import com.google.android.apps.forscience.whistlepunk.data.GoosciSensorSpec;
-import com.google.android.apps.forscience.whistlepunk.metadata.BleSensorSpec;
 import com.google.android.apps.forscience.whistlepunk.metadata.ExternalSensorSpec;
+import com.google.android.apps.forscience.whistlepunk.metadata.MkrSciBleDeviceSpec;
+import com.google.android.apps.forscience.whistlepunk.metadata.MkrSciBleSensorSpec;
 import com.google.android.apps.forscience.whistlepunk.sensorapi.SensorChoice;
-import com.google.android.apps.forscience.whistlepunk.sensors.BleServiceSpec;
-import com.google.android.apps.forscience.whistlepunk.sensors.BluetoothSensor;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor;
 
 /**
- * Discovers BLE sensors that speak our "native" Science Journal protocol.
+ * Discovers BLE sensors that speak the Arduino "MkrSci" Science Journal protocol.
  */
-public class NativeBleDiscoverer implements SensorDiscoverer {
+public class MkrSciBleDiscoverer implements SensorDiscoverer {
 
     private static final SensorProvider PROVIDER = new SensorProvider() {
         @Override
         public SensorChoice buildSensor(String sensorId, ExternalSensorSpec spec) {
-            return new BluetoothSensor(sensorId, (BleSensorSpec) spec,
-                    BluetoothSensor.ANNING_SERVICE_SPEC);
+            return new MkrSciBleSensor(sensorId, (MkrSciBleSensorSpec) spec);
         }
 
         @Override
         public ExternalSensorSpec buildSensorSpec(String name, byte[] config) {
-            return new BleSensorSpec(name, config);
+            return new MkrSciBleSensorSpec(name, config);
         }
     };
 
-    private static final String SERVICE_ID = "com.google.android.apps.forscience.whistlepunk.ble";
+    private static final String SERVICE_ID =
+            "com.google.android.apps.forscience.whistlepunk.mkrscible";
 
     private DeviceDiscoverer mDeviceDiscoverer;
     private Runnable mOnScanDone;
     private Context mContext;
 
-    public NativeBleDiscoverer(Context context) {
+    public MkrSciBleDiscoverer(Context context) {
         mContext = context;
     }
 
@@ -75,14 +73,9 @@ public class NativeBleDiscoverer implements SensorDiscoverer {
     public boolean startScanning(final ScanListener listener, FailureListener onScanError) {
         stopScanning();
 
-        // BLE scan is only done when it times out (which is imposed from fragment)
-        // TODO: consider making that timeout internal (like it is for API sensor services)
-        mOnScanDone = new Runnable() {
-            @Override
-            public void run() {
-                listener.onServiceScanComplete(SERVICE_ID);
-                listener.onScanDone();
-            }
+        mOnScanDone = () -> {
+            listener.onServiceScanComplete(SERVICE_ID);
+            listener.onScanDone();
         };
 
         mDeviceDiscoverer = createDiscoverer(mContext);
@@ -97,8 +90,8 @@ public class NativeBleDiscoverer implements SensorDiscoverer {
 
             @Override
             public String getName() {
-                // TODO: agree on a string here
-                return mContext.getString(R.string.native_ble_service_name);
+                // return mContext.getString(R.string.native_ble_service_name);
+                return "MKR Science Boards";
             }
 
             @Override
@@ -136,11 +129,10 @@ public class NativeBleDiscoverer implements SensorDiscoverer {
             stopScanning();
             return false;
         }
-        List<ParcelUuid> uuids = new ArrayList<>();
-        for (BleServiceSpec spec : BluetoothSensor.SUPPORTED_SERVICES) {
-            uuids.add(ParcelUuid.fromString(spec.getServiceId().toString()));
-        }
-        mDeviceDiscoverer.startScanning(uuids.toArray(new ParcelUuid[0]), new DeviceDiscoverer.Callback() {
+
+        mDeviceDiscoverer.startScanning(new ParcelUuid[]{
+                ParcelUuid.fromString(MkrSciBleManager.SERVICE_UUID)
+        }, new DeviceDiscoverer.Callback() {
             @Override
             public void onDeviceFound(final DeviceDiscoverer.DeviceRecord record) {
                 onDeviceRecordFound(record, listener);
@@ -148,7 +140,6 @@ public class NativeBleDiscoverer implements SensorDiscoverer {
 
             @Override
             public void onError(int error) {
-                // TODO: handle errors
             }
         });
         return true;
@@ -179,10 +170,12 @@ public class NativeBleDiscoverer implements SensorDiscoverer {
     private void onDeviceRecordFound(DeviceDiscoverer.DeviceRecord record,
                                      ScanListener scanListener) {
         WhistlepunkBleDevice device = record.device;
-        String address = device.getAddress();
+
+        final String address = device.getAddress();
 
         // sensorScanCallbacks will handle duplicates
-        final BleSensorSpec spec = new BleSensorSpec(address, device.getName());
+
+        final MkrSciBleDeviceSpec spec = new MkrSciBleDeviceSpec(address, device.getName());
 
         scanListener.onDeviceFound(new DiscoveredDevice() {
             @Override
@@ -196,8 +189,43 @@ public class NativeBleDiscoverer implements SensorDiscoverer {
             }
         });
 
-        scanListener.onSensorFound(new DiscoveredSensor() {
+        addSensor(scanListener, address,
+                MkrSciBleSensor.SENSOR_INPUT_1, "Input 1");
+        addSensor(scanListener, address,
+                MkrSciBleSensor.SENSOR_INPUT_2, "Input 2");
+        addSensor(scanListener, address,
+                MkrSciBleSensor.SENSOR_INPUT_3, "Input 3");
+        addSensor(scanListener, address,
+                MkrSciBleSensor.SENSOR_VOLTAGE, "Voltage");
+        addSensor(scanListener, address,
+                MkrSciBleSensor.SENSOR_CURRENT, "Current");
+        addSensor(scanListener, address,
+                MkrSciBleSensor.SENSOR_RESISTANCE, "Resistance");
+        addSensor(scanListener, address,
+                MkrSciBleSensor.SENSOR_TEMPERATURE, "Temperature");
+        addSensor(scanListener, address,
+                MkrSciBleSensor.SENSOR_ACCELEROMETER_X, "Accelerometer X");
+        addSensor(scanListener, address,
+                MkrSciBleSensor.SENSOR_ACCELEROMETER_Y, "Accelerometer Y");
+        addSensor(scanListener, address,
+                MkrSciBleSensor.SENSOR_ACCELEROMETER_Z, "Accelerometer Z");
+        addSensor(scanListener, address,
+                MkrSciBleSensor.SENSOR_GYROSCOPE_X, "Gyroscope X");
+        addSensor(scanListener, address,
+                MkrSciBleSensor.SENSOR_GYROSCOPE_Y, "Gyroscope Y");
+        addSensor(scanListener, address,
+                MkrSciBleSensor.SENSOR_GYROSCOPE_Z, "Gyroscope Z");
+        addSensor(scanListener, address,
+                MkrSciBleSensor.SENSOR_MAGNETOMETER_X, "Magnetometer X");
+        addSensor(scanListener, address,
+                MkrSciBleSensor.SENSOR_MAGNETOMETER_Y, "Magnetometer Y");
+        addSensor(scanListener, address,
+                MkrSciBleSensor.SENSOR_MAGNETOMETER_Z, "Magnetometer Z");
+    }
 
+    private void addSensor(ScanListener scanListener, String address, String sensor, String name) {
+        final MkrSciBleSensorSpec spec = new MkrSciBleSensorSpec(address, sensor, name);
+        scanListener.onSensorFound(new DiscoveredSensor() {
             @Override
             public GoosciSensorSpec.SensorSpec getSensorSpec() {
                 return spec.asGoosciSpec();
@@ -205,24 +233,14 @@ public class NativeBleDiscoverer implements SensorDiscoverer {
 
             @Override
             public SettingsInterface getSettingsInterface() {
-                return new SettingsInterface() {
-                    @Override
-                    public void show(String experimentId, String sensorId,
-                                     FragmentManager fragmentManager, boolean showForgetButton) {
-                        DeviceOptionsDialog dialog = DeviceOptionsDialog.newInstance(experimentId,
-                                sensorId, null, showForgetButton);
-                        dialog.show(fragmentManager, "edit_device");
-                    }
-                };
+                return null;
             }
 
             @Override
             public boolean shouldReplaceStoredSensor(ConnectableSensor oldSensor) {
-                // The current implementation of this discoverer does not notice when it detects
-                // a sensor that has already been customized in the database, so we should not
-                // overwrite local customizations
                 return false;
             }
         });
     }
+
 }
