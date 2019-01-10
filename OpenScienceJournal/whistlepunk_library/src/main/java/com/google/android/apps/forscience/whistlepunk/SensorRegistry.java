@@ -253,8 +253,9 @@ public class SensorRegistry {
         Set<String> previousExternalSources = getAllExternalSources();
 
         // Add previously unknown sensors
+        // TODO h42 solo paired
         for (ConnectableSensor newSensor : sensors) {
-            if (newSensor.getSpec() != null) {
+            if (newSensor.getSpec() != null && newSensor.isPaired()) {
                 String externalSensorId = newSensor.getConnectedSensorId();
                 if (!previousExternalSources.remove(externalSensorId)) {
                     // sensor is new

@@ -19,21 +19,21 @@ public class MkrSciBleSensor extends ScalarSensor {
 
     private static final Handler sHandler = new Handler(Looper.getMainLooper());
 
-    public static final String SENSOR_INPUT_1 = "input_1";
-    public static final String SENSOR_INPUT_2 = "input_2";
-    public static final String SENSOR_INPUT_3 = "input_3";
-    public static final String SENSOR_VOLTAGE = "voltage";
-    public static final String SENSOR_CURRENT = "current";
-    public static final String SENSOR_RESISTANCE = "resistance";
-    public static final String SENSOR_ACCELEROMETER_X = "accelerometer_x";
-    public static final String SENSOR_ACCELEROMETER_Y = "accelerometer_y";
-    public static final String SENSOR_ACCELEROMETER_Z = "accelerometer_z";
-    public static final String SENSOR_GYROSCOPE_X = "gyroscope_x";
-    public static final String SENSOR_GYROSCOPE_Y = "gyroscope_y";
-    public static final String SENSOR_GYROSCOPE_Z = "gyroscope_z";
-    public static final String SENSOR_MAGNETOMETER_X = "magnetometer_x";
-    public static final String SENSOR_MAGNETOMETER_Y = "magnetometer_y";
-    public static final String SENSOR_MAGNETOMETER_Z = "magnetometer_z";
+    public static final String SENSOR_INPUT_1 = "1001_input_1";
+    public static final String SENSOR_INPUT_2 = "1002_input_2";
+    public static final String SENSOR_INPUT_3 = "1003_input_3";
+    public static final String SENSOR_VOLTAGE = "2001_voltage";
+    public static final String SENSOR_CURRENT = "3001_current";
+    public static final String SENSOR_RESISTANCE = "4001_resistance";
+    public static final String SENSOR_ACCELEROMETER_X = "5000_accelerometer_x";
+    public static final String SENSOR_ACCELEROMETER_Y = "5001_accelerometer_y";
+    public static final String SENSOR_ACCELEROMETER_Z = "5002_accelerometer_z";
+    public static final String SENSOR_GYROSCOPE_X = "6001_gyroscope_x";
+    public static final String SENSOR_GYROSCOPE_Y = "6002_gyroscope_y";
+    public static final String SENSOR_GYROSCOPE_Z = "6003_gyroscope_z";
+    public static final String SENSOR_MAGNETOMETER_X = "7001_magnetometer_x";
+    public static final String SENSOR_MAGNETOMETER_Y = "7002_magnetometer_y";
+    public static final String SENSOR_MAGNETOMETER_Z = "7003_magnetometer_z";
 
     private String mAddress;
 

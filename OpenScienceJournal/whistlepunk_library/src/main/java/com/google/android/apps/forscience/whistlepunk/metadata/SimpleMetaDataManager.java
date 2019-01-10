@@ -25,7 +25,6 @@ import android.database.sqlite.SQLiteStatement;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.util.ArraySet;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -251,6 +250,7 @@ public class SimpleMetaDataManager implements MetaDataManager {
     /**
      * Tries to migrate a label's picture assets if it is a picture label, returns true if the label
      * was modified.
+     *
      * @param label The label whose pictures should be migrated, if needed
      * @return true if the label was modified
      */
@@ -298,7 +298,7 @@ public class SimpleMetaDataManager implements MetaDataManager {
         List<String> experimentIds = new ArrayList<>();
         Cursor cursor = null;
         try {
-            cursor = db.query(Tables.EXPERIMENTS, new String[] {ExperimentColumns.EXPERIMENT_ID},
+            cursor = db.query(Tables.EXPERIMENTS, new String[]{ExperimentColumns.EXPERIMENT_ID},
                     null, null, null, null, null);
             while (cursor.moveToNext()) {
                 experimentIds.add(cursor.getString(0));
@@ -372,7 +372,7 @@ public class SimpleMetaDataManager implements MetaDataManager {
      * experiments returned do not contain their trials, labels, triggers, sensors, etc.
      */
     private static List<Experiment> getAllDatabaseExperimentsForProject(SQLiteDatabase db,
-            Project project) {
+                                                                        Project project) {
         List<Experiment> experiments = new ArrayList<>();
         String selection = ExperimentColumns.PROJECT_ID + "=?";
         String[] selectionArgs = new String[]{project.getProjectId()};
@@ -495,7 +495,7 @@ public class SimpleMetaDataManager implements MetaDataManager {
 
     // Gets the experiment from the database.
     private static Experiment getDatabaseExperimentById(SQLiteDatabase db, String experimentId,
-            Context context, boolean includeTrials) {
+                                                        Context context, boolean includeTrials) {
         Experiment experiment;
         final String selection = ExperimentColumns.EXPERIMENT_ID + "=?";
         final String[] selectionArgs = new String[]{experimentId};
@@ -560,7 +560,7 @@ public class SimpleMetaDataManager implements MetaDataManager {
     }
 
     private static void deleteDatabaseExperiment(SQLiteDatabase db, Experiment experiment,
-            Context context) {
+                                                 Context context) {
         List<String> runIds = getDatabaseExperimentRunIds(db, experiment.getExperimentId(),
                 /* include archived runs */ true);
         for (String runId : runIds) {
@@ -676,7 +676,7 @@ public class SimpleMetaDataManager implements MetaDataManager {
     }
 
     private static void deleteDatabaseObjectsInExperiment(SQLiteDatabase db,
-            Experiment experiment, Context context) {
+                                                          Experiment experiment, Context context) {
         List<Label> labels = getDatabaseLabelsForExperiment(db, experiment, context);
         for (Label label : labels) {
             deleteDatabaseLabel(db, label);
@@ -688,7 +688,7 @@ public class SimpleMetaDataManager implements MetaDataManager {
     }
 
     private static void populateDatabaseExperiment(SQLiteDatabase db, Experiment experiment,
-            Context context, boolean includeTrials) {
+                                                   Context context, boolean includeTrials) {
         if (experiment == null) {
             return;
         }
@@ -719,7 +719,7 @@ public class SimpleMetaDataManager implements MetaDataManager {
 
     @VisibleForTesting
     Trial newTrial(Experiment experiment, String trialId, long startTimestamp,
-            List<GoosciSensorLayout.SensorLayout> sensorLayouts) {
+                   List<GoosciSensorLayout.SensorLayout> sensorLayouts) {
         // How many runs already exist?
         List<String> runIds = getDatabaseExperimentRunIds(experiment.getExperimentId(),
                 /* include archived runs for indexing */ true);
@@ -758,7 +758,7 @@ public class SimpleMetaDataManager implements MetaDataManager {
     }
 
     private void insertRunSensors(String runId,
-            List<GoosciSensorLayout.SensorLayout> sensorLayouts) {
+                                  List<GoosciSensorLayout.SensorLayout> sensorLayouts) {
         synchronized (mLock) {
             final SQLiteDatabase db = mDbHelper.getWritableDatabase();
             final ContentValues values = new ContentValues();
@@ -778,7 +778,7 @@ public class SimpleMetaDataManager implements MetaDataManager {
     }
 
     private void updateTrialSensors(String runId,
-            List<GoosciSensorLayout.SensorLayout> sensorLayouts) {
+                                    List<GoosciSensorLayout.SensorLayout> sensorLayouts) {
         synchronized (mLock) {
             final SQLiteDatabase db = mDbHelper.getWritableDatabase();
             final ContentValues values = new ContentValues();
@@ -802,7 +802,7 @@ public class SimpleMetaDataManager implements MetaDataManager {
     }
 
     private static Trial getDatabaseTrial(SQLiteDatabase db, String trialId,
-            List<ApplicationLabel> applicationLabels, Context context) {
+                                          List<ApplicationLabel> applicationLabels, Context context) {
         List<Label> labels = getDatabaseLabelsForTrial(db, trialId, context);
 
         List<GoosciSensorLayout.SensorLayout> sensorLayouts = new ArrayList<>();
@@ -885,7 +885,7 @@ public class SimpleMetaDataManager implements MetaDataManager {
 
     @VisibleForTesting
     public static void populateTrialProtoFromLabels(GoosciTrial.Trial trialProto,
-            List<ApplicationLabel> applicationLabels, List<Label> labels) {
+                                                    List<ApplicationLabel> applicationLabels, List<Label> labels) {
         // Populate the recording and crop ranges from labels.
         trialProto.recordingRange = new GoosciTrial.Range();
         for (ApplicationLabel label : applicationLabels) {
@@ -916,7 +916,7 @@ public class SimpleMetaDataManager implements MetaDataManager {
      */
     @VisibleForTesting
     void setExperimentSensorLayouts(String experimentId,
-            List<GoosciSensorLayout.SensorLayout> sensorLayouts) {
+                                    List<GoosciSensorLayout.SensorLayout> sensorLayouts) {
         synchronized (mLock) {
             final SQLiteDatabase db = mDbHelper.getWritableDatabase();
             for (int i = 0; i < sensorLayouts.size(); i++) {
@@ -1004,7 +1004,7 @@ public class SimpleMetaDataManager implements MetaDataManager {
 
     @Override
     public String addOrGetExternalSensor(ExternalSensorSpec sensor,
-            Map<String, SensorProvider> providerMap) {
+                                         Map<String, SensorProvider> providerMap) {
         synchronized (mLock) {
             final SQLiteDatabase db = mDbHelper.getReadableDatabase();
             String sensorId = getExternalSensorId(sensor, db);
@@ -1033,7 +1033,7 @@ public class SimpleMetaDataManager implements MetaDataManager {
     private String getExternalSensorId(ExternalSensorSpec sensor, SQLiteDatabase db) {
         String sql = "SELECT IFNULL(MIN(" + SensorColumns.SENSOR_ID + "), '') FROM " + Tables
                 .EXTERNAL_SENSORS + " WHERE " + SensorColumns.CONFIG + "=? AND " +
-                     SensorColumns.TYPE + "=?";
+                SensorColumns.TYPE + "=?";
         SQLiteStatement statement = db.compileStatement(sql);
         statement.bindBlob(1, sensor.getConfig());
         statement.bindString(2, sensor.getType());
@@ -1046,7 +1046,7 @@ public class SimpleMetaDataManager implements MetaDataManager {
 
     @VisibleForTesting
     void addDatabaseLabel(String experimentId, String trialId, Label label,
-            LabelValue labelValue) {
+                          LabelValue labelValue) {
         synchronized (mLock) {
             final SQLiteDatabase db = mDbHelper.getWritableDatabase();
             addDatabaseLabel(db, experimentId, trialId, label, labelValue);
@@ -1054,7 +1054,7 @@ public class SimpleMetaDataManager implements MetaDataManager {
     }
 
     private static void addDatabaseLabel(SQLiteDatabase db, String experimentId, String trialId,
-            Label label, LabelValue labelValue) {
+                                         Label label, LabelValue labelValue) {
         ContentValues values = new ContentValues();
         values.put(LabelColumns.EXPERIMENT_ID, experimentId);
         values.put(LabelColumns.TYPE, getLabelTag(label));
@@ -1117,16 +1117,17 @@ public class SimpleMetaDataManager implements MetaDataManager {
      * an experiment with labels.
      */
     private static List<Label> getDatabaseLabelsForExperiment(SQLiteDatabase db,
-            Experiment experiment, Context context) {
+                                                              Experiment experiment, Context context) {
         final String selection = LabelColumns.EXPERIMENT_ID + "=? AND " +
-                LabelColumns.START_LABEL_ID + "=? and not " + LabelColumns.TYPE + "=?";;
+                LabelColumns.START_LABEL_ID + "=? and not " + LabelColumns.TYPE + "=?";
+        ;
         final String[] selectionArgs = new String[]{experiment.getExperimentId(),
                 RecorderController.NOT_RECORDING_RUN_ID, ApplicationLabel.TAG};
         return getDatabaseLabels(db, selection, selectionArgs, context);
     }
 
     private static List<Label> getDatabaseLabels(SQLiteDatabase db, String selection,
-            String[] selectionArgs, Context context) {
+                                                 String[] selectionArgs, Context context) {
         List<Label> labels = new ArrayList<>();
         Cursor cursor = null;
         try {
@@ -1222,7 +1223,7 @@ public class SimpleMetaDataManager implements MetaDataManager {
     }
 
     private static List<Label> getDatabaseLabelsForTrial(SQLiteDatabase db, String trialId,
-            Context context) {
+                                                         Context context) {
         final String selection = LabelColumns.START_LABEL_ID + "=? and not " +
                 LabelColumns.TYPE + "=?";
         final String[] selectionArgs = new String[]{trialId, ApplicationLabel.TAG};
@@ -1240,14 +1241,14 @@ public class SimpleMetaDataManager implements MetaDataManager {
     }
 
     private static List<ApplicationLabel> getDatabaseApplicationLabelsWithStartId(SQLiteDatabase db,
-            String trialId) {
+                                                                                  String trialId) {
         final String selection = LabelColumns.START_LABEL_ID + "=? and " + LabelColumns.TYPE + "=?";
         final String[] selectionArgs = new String[]{trialId, ApplicationLabel.TAG};
         return getDatabaseApplicationLabels(db, selection, selectionArgs);
     }
 
     private static List<ApplicationLabel> getDatabaseApplicationLabels(SQLiteDatabase db,
-            String selection, String[] selectionArgs) {
+                                                                       String selection, String[] selectionArgs) {
         List<ApplicationLabel> labels = new ArrayList<>();
         Cursor cursor = null;
         try {
@@ -1348,7 +1349,7 @@ public class SimpleMetaDataManager implements MetaDataManager {
     }
 
     private static List<String> getDatabaseExperimentRunIds(SQLiteDatabase db, String experimentId,
-            boolean includeArchived) {
+                                                            boolean includeArchived) {
         List<String> ids = new ArrayList<>();
         Cursor cursor = null;
         try {
@@ -1461,7 +1462,7 @@ public class SimpleMetaDataManager implements MetaDataManager {
     // TODO: this should return SensorSpec instead of building it from providers right here.
     @Override
     public ExternalSensorSpec getExternalSensorById(String id,
-            Map<String, SensorProvider> providerMap) {
+                                                    Map<String, SensorProvider> providerMap) {
         ExternalSensorSpec sensor = null;
         synchronized (mLock) {
             final SQLiteDatabase db = mDbHelper.getReadableDatabase();
@@ -1482,7 +1483,7 @@ public class SimpleMetaDataManager implements MetaDataManager {
     }
 
     private ExternalSensorSpec loadSensorFromDatabase(Cursor c,
-            Map<String, SensorProvider> providerMap) {
+                                                      Map<String, SensorProvider> providerMap) {
         String type = c.getString(SensorQuery.TYPE_INDEX);
         SensorProvider sensorProvider = providerMap.get(type);
         if (sensorProvider == null) {
@@ -1503,7 +1504,7 @@ public class SimpleMetaDataManager implements MetaDataManager {
     }
 
     private void setSensorExperimentInclusion(String databaseTag, String experimentId,
-            boolean included) {
+                                              boolean included) {
         synchronized (mLock) {
             final SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
@@ -1511,6 +1512,14 @@ public class SimpleMetaDataManager implements MetaDataManager {
             // Delete them all (and don't do that again).
             removeSensorExperimentInclusion(databaseTag, experimentId);
             addSensorExperimentInclusion(db, databaseTag, experimentId, included);
+        }
+    }
+
+    @Override
+    public void eraseSensorFromExperiment(String databaseTag, String experimentId) {
+        synchronized (mLock) {
+            final SQLiteDatabase db = mDbHelper.getWritableDatabase();
+            removeSensorExperimentInclusion(databaseTag, experimentId);
         }
     }
 
@@ -1523,7 +1532,7 @@ public class SimpleMetaDataManager implements MetaDataManager {
     }
 
     private static void addSensorExperimentInclusion(SQLiteDatabase db, String databaseTag,
-            String experimentId, boolean included) {
+                                                     String experimentId, boolean included) {
         ContentValues values = new ContentValues();
         values.put(ExperimentSensorColumns.SENSOR_TAG, databaseTag);
         values.put(ExperimentSensorColumns.EXPERIMENT_ID, experimentId);
@@ -1533,50 +1542,43 @@ public class SimpleMetaDataManager implements MetaDataManager {
 
     @Override
     public ExperimentSensors getExperimentSensors(String experimentId,
-            Map<String, SensorProvider> providerMap, ConnectableSensor.Connector connector) {
-        List<ConnectableSensor> includedSensors = new ArrayList<>();
-        Set<String> excludedTags = new ArraySet<>();
-
+                                                  Map<String, SensorProvider> providerMap, ConnectableSensor.Connector connector) {
+        final List<ConnectableSensor> externalSensors = new ArrayList<>();
+        final Set<String> excludedInternalSensorTags = new HashSet<>();
         synchronized (mLock) {
+            final String sql = "SELECT t1." + ExperimentSensorColumns.SENSOR_TAG +
+                    ", t1." + ExperimentSensorColumns.INCLUDED +
+                    ", t2. " + SensorColumns.TYPE +
+                    ", t2. " + SensorColumns.NAME +
+                    ", t2. " + SensorColumns.CONFIG +
+                    " FROM " + Tables.EXPERIMENT_SENSORS + " t1 LEFT OUTER JOIN " + Tables.EXTERNAL_SENSORS + " t2" +
+                    " ON t1." + ExperimentSensorColumns.SENSOR_TAG + " = t2." + SensorColumns.SENSOR_ID +
+                    " WHERE t1." + ExperimentSensorColumns.EXPERIMENT_ID + " = ?" +
+                    " ORDER BY t1." + ExperimentSensorColumns.SENSOR_TAG + " ASC";
             final SQLiteDatabase db = mDbHelper.getReadableDatabase();
-            Cursor c = null;
-            List<String> tags = new ArrayList<>();
-            try {
-                // Explicitly order by ascending rowid, to preserve insertion order
-                c = db.query(Tables.EXPERIMENT_SENSORS,
-                        new String[]{ExperimentSensorColumns.SENSOR_TAG,
-                                ExperimentSensorColumns.INCLUDED},
-                        ExperimentSensorColumns.EXPERIMENT_ID + "=?",
-                        new String[]{experimentId}, null, null, BaseColumns._ID + " ASC");
+            try (Cursor c = db.rawQuery(sql, new String[]{experimentId})) {
                 while (c.moveToNext()) {
                     String tag = c.getString(0);
                     boolean included = c.getInt(1) > 0;
-
-                    if (included) {
-                        // We don't expect to get duplicates, but we can deal with them gracefully.
-                        if (!tags.contains(tag)) {
-                            tags.add(tag);
+                    String type = c.getString(2);
+                    if (type == null) {
+                        if (!included) {
+                            excludedInternalSensorTags.add(tag);
                         }
                     } else {
-                        excludedTags.add(tag);
+                        SensorProvider sensorProvider = providerMap.get(type);
+                        if (sensorProvider != null) {
+                            ExternalSensorSpec spec = sensorProvider.buildSensorSpec(
+                                    c.getString(3), c.getBlob(4));
+                            ConnectableSensor sensor = connector.connected(
+                                    ExternalSensorSpec.toGoosciSpec(spec), tag, included);
+                            externalSensors.add(sensor);
+                        }
                     }
                 }
-            } finally {
-                if (c != null) {
-                    c.close();
-                }
-            }
-
-            // This is somewhat inefficient to do nested queries, but in most cases there will
-            // only be one or two, so we are trading off code complexity of doing a db join.
-            for (String tag : tags) {
-                ExternalSensorSpec sensor = getExternalSensorById(tag, providerMap);
-                includedSensors.add(
-                        connector.connected(ExternalSensorSpec.toGoosciSpec(sensor), tag));
             }
         }
-
-        return new ExperimentSensors(includedSensors, excludedTags);
+        return new ExperimentSensors(externalSensors, excludedInternalSensorTags);
     }
 
     @Override
@@ -1662,7 +1664,7 @@ public class SimpleMetaDataManager implements MetaDataManager {
      * Gets a list of SensorTrigger by their experiment ID.
      */
     private static List<SensorTrigger> getDatabaseSensorTriggers(SQLiteDatabase db,
-            String experimentId) {
+                                                                 String experimentId) {
         List<SensorTrigger> triggers = new ArrayList<>();
         if (TextUtils.isEmpty(experimentId)) {
             return triggers;
@@ -2030,10 +2032,11 @@ public class SimpleMetaDataManager implements MetaDataManager {
 
             void onMigrateMyDevicesToProto(SQLiteDatabase db);
         }
+
         private MetadataDatabaseUpgradeCallback mUpgradeCallback;
 
         DatabaseHelper(Context context, String filename,
-                MetadataDatabaseUpgradeCallback upgradeCallback) {
+                       MetadataDatabaseUpgradeCallback upgradeCallback) {
             super(context, filename != null ? filename : DB_NAME, null, DB_VERSION);
             mUpgradeCallback = upgradeCallback;
         }

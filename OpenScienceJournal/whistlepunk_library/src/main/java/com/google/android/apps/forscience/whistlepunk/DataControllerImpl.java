@@ -432,6 +432,28 @@ public class DataControllerImpl implements DataController, RecordingDataControll
     }
 
     @Override
+    public void eraseSensorFromExperiment(final String experimentId, final String sensorId,
+                                           final MaybeConsumer<Success> onSuccess) {
+        getExperimentById(experimentId, MaybeConsumers.chainFailure(onSuccess,
+                new Consumer<Experiment>() {
+                    @Override
+                    public void take(final Experiment experiment) {
+                        replaceIdInLayouts(experiment, sensorId, "");
+                        background(mMetaDataThread, onSuccess,
+                                new Callable<Success>() {
+                                    @Override
+                                    public Success call() throws Exception {
+                                        mMetaDataManager.eraseSensorFromExperiment(sensorId,
+                                                experimentId);
+                                        mMetaDataManager.updateExperiment(experiment);
+                                        return Success.SUCCESS;
+                                    }
+                                });
+                    }
+                }));
+    }
+
+    @Override
     public void setDataErrorListenerForSensor(String sensorId, FailureListener listener) {
         mSensorFailureListeners.put(sensorId, listener);
     }

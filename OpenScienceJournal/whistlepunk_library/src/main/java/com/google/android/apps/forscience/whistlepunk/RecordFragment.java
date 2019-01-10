@@ -1185,8 +1185,8 @@ public class RecordFragment extends PanesToolFragment implements Handler.Callbac
                             "add external sensors") {
                         @Override
                         public void success(ExperimentSensors sensors) {
-                            mSensorRegistry.setExcludedIds(sensors.getExcludedSensorIds());
-                            updateExternalSensors(sensors.getIncludedSensors());
+                            mSensorRegistry.setExcludedIds(sensors.getExcludedInternalSensorIds());
+                            updateExternalSensors(sensors.getExternalSensors());
                             setSensorPresenters(layouts, rc, status);
                         }
                     });

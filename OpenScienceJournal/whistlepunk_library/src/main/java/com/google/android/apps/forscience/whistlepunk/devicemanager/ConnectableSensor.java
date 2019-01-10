@@ -65,6 +65,15 @@ public class ConnectableSensor {
         }
 
         /**
+         * Create an entry for an external sensor we've connected to in the past
+         */
+        @NonNull
+        public ConnectableSensor connected(GoosciSensorSpec.SensorSpec sensorSpec,
+                                           String connectedSensorId, boolean included) {
+            return new ConnectableSensor(sensorSpec, connectedSensorId, included, mProviders);
+        }
+
+        /**
          * Create an entry for an external sensor we've never connected to
          */
         public ConnectableSensor disconnected(GoosciSensorSpec.SensorSpec sensorSpec) {
@@ -118,7 +127,7 @@ public class ConnectableSensor {
     }
 
     public static Map<String, ExternalSensorSpec> makeMap(ExperimentSensors sensors) {
-        return makeMap(sensors.getIncludedSensors());
+        return makeMap(sensors.getExternalSensors());
     }
 
     public boolean isPaired() {

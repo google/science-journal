@@ -113,6 +113,12 @@ public interface DataController {
             MaybeConsumer<Success> onSuccess);
 
     /**
+     * Completely removes a sensor reference from an experiment.
+     */
+    void eraseSensorFromExperiment(final String experimentId, final String sensorId,
+                                   final MaybeConsumer<Success> onSuccess);
+
+    /**
      * Makes sure there is an external sensor already registered in the database with the given
      * spec, and returns its id to {@code onSensorId}
      */

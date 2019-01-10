@@ -91,6 +91,11 @@ public interface MetaDataManager {
     void removeSensorFromExperiment(String databaseTag, String experimentId);
 
     /**
+     * Completely erase references to a sensor from an experiment.
+     */
+    void eraseSensorFromExperiment(String databaseTag, String experimentId);
+
+    /**
      * Gets all the external sensors which are linked to an experiment, in insertion order
      */
     ExperimentSensors getExperimentSensors(String experimentId,

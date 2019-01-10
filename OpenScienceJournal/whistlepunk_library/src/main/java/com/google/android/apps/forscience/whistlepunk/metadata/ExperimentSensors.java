@@ -15,44 +15,48 @@
  */
 package com.google.android.apps.forscience.whistlepunk.metadata;
 
+import android.support.annotation.NonNull;
+
 import com.google.android.apps.forscience.whistlepunk.devicemanager.ConnectableSensor;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
  * The sensors that should be available in an experiment are defined as:
- *
+ * <p>
  * - The built in sensors
  * - plus (set union) getIncludedSensors
  * - minus (set difference) getExcludedSensorIds
- *
+ * <p>
  * For simplicity of database migration, there may be built-in sensors included in
  * getIncludedSensors, and non-built-in sensors included in getExcludedSensors.
  */
 public class ExperimentSensors {
-    private List<ConnectableSensor> mIncluded;
-    private Set<String> mExcluded;
+    private List<ConnectableSensor> mExternalSensors;
+    private Set<String> mExcludedInternalSensorIds;
 
-    public ExperimentSensors(List<ConnectableSensor> includedSensors,
-            Set<String> excludedSensorIds) {
-        mIncluded = includedSensors;
-        mExcluded = excludedSensorIds;
+    public ExperimentSensors(List<ConnectableSensor> externalSensors,
+                             Set<String> excludedInternalSensorIds) {
+        mExternalSensors = externalSensors;
+        mExcludedInternalSensorIds = excludedInternalSensorIds;
     }
 
-    public List<ConnectableSensor> getIncludedSensors() {
-        return mIncluded;
+    public List<ConnectableSensor> getExternalSensors() {
+        return mExternalSensors;
     }
 
-    public Set<String> getExcludedSensorIds() {
-        return mExcluded;
+    public Set<String> getExcludedInternalSensorIds() {
+        return mExcludedInternalSensorIds;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "ExperimentSensors{" +
-                "mIncluded=" + mIncluded +
-                ", mExcluded=" + mExcluded +
+                "mExternalSensors=" + mExternalSensors +
+                ", mExcludedInternalSensorIds=" + mExcludedInternalSensorIds +
                 '}';
     }
 
@@ -65,17 +69,9 @@ public class ExperimentSensors {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         ExperimentSensors that = (ExperimentSensors) o;
-
-        if (mIncluded != null ? !mIncluded.equals(that.mIncluded) : that.mIncluded != null) {
-            return false;
-        }
-        if (mExcluded != null ? !mExcluded.equals(that.mExcluded) : that.mExcluded != null) {
-            return false;
-        }
-
-        return true;
+        return Objects.equals(mExternalSensors, that.mExternalSensors) &&
+                Objects.equals(mExcludedInternalSensorIds, that.mExcludedInternalSensorIds);
     }
 
     /**
@@ -83,8 +79,6 @@ public class ExperimentSensors {
      */
     @Override
     public int hashCode() {
-        int result = mIncluded != null ? mIncluded.hashCode() : 0;
-        result = 31 * result + (mExcluded != null ? mExcluded.hashCode() : 0);
-        return result;
+        return Objects.hash(mExternalSensors, mExcludedInternalSensorIds);
     }
 }
