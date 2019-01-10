@@ -10,6 +10,8 @@ import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import java.nio.ByteBuffer;
@@ -17,284 +19,253 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 public class MkrSciBleManager {
 
     public static final String SERVICE_UUID = "555a0001-0000-467a-9538-01f0652c74e8";
 
-    private static final ManagedCharacteristic CHARACTERISTIC_INPUT_1 =
-            new ManagedCharacteristic("555a0001-2001-467a-9538-01f0652c74e8", ValueType.UINT16);
+    public static final String INPUT_1_UUID = "555a0001-2001-467a-9538-01f0652c74e8";
+    public static final String INPUT_2_UUID = "555a0001-2002-467a-9538-01f0652c74e8";
+    public static final String INPUT_3_UUID = "555a0001-2003-467a-9538-01f0652c74e8";
+    public static final String VOLTAGE_UUID = "555a0001-4001-467a-9538-01f0652c74e8";
+    public static final String CURRENT_UUID = "555a0001-4002-467a-9538-01f0652c74e8";
+    public static final String RESISTANCE_UUID = "555a0001-4003-467a-9538-01f0652c74e8";
+    public static final String ACCELEROMETER_UUID = "555a0001-5001-467a-9538-01f0652c74e8";
+    public static final String GYROSCOPE_UUID = "555a0001-5002-467a-9538-01f0652c74e8";
+    public static final String MAGNETOMETER_UUID = "555a0001-5003-467a-9538-01f0652c74e8";
 
-    private static final ManagedCharacteristic CHARACTERISTIC_INPUT_2 =
-            new ManagedCharacteristic("555a0001-2002-467a-9538-01f0652c74e8", ValueType.UINT16);
+    private static final Handler sHandler = new Handler(Looper.getMainLooper());
 
-    private static final ManagedCharacteristic CHARACTERISTIC_INPUT_3 =
-            new ManagedCharacteristic("555a0001-2003-467a-9538-01f0652c74e8", ValueType.UINT16);
+    // device bt address > gatt handler
+    private static final Map<String, GattHandler> sGattHandlers = new HashMap<>();
 
-    private static final ManagedCharacteristic CHARACTERISTIC_VOLTAGE =
-            new ManagedCharacteristic("555a0001-4001-467a-9538-01f0652c74e8", ValueType.SFLOAT);
-
-    private static final ManagedCharacteristic CHARACTERISTIC_CURRENT =
-            new ManagedCharacteristic("555a0001-4002-467a-9538-01f0652c74e8", ValueType.SFLOAT);
-
-    private static final ManagedCharacteristic CHARACTERISTIC_RESISTANCE =
-            new ManagedCharacteristic("555a0001-4003-467a-9538-01f0652c74e8", ValueType.SFLOAT);
-
-    private static final ManagedCharacteristic CHARACTERISTIC_TEMPERATURE =
-            new ManagedCharacteristic("555a0001-000b-467a-9538-01f0652c74e8", ValueType.SFLOAT);
-
-    private static final ManagedCharacteristic CHARACTERISTIC_ACCELEROMETER =
-            new ManagedCharacteristic("555a0001-5001-467a-9538-01f0652c74e8", ValueType.SFLOAT_ARR);
-
-    private static final ManagedCharacteristic CHARACTERISTIC_GYROSCOPE =
-            new ManagedCharacteristic("555a0001-5002-467a-9538-01f0652c74e8", ValueType.SFLOAT_ARR);
-
-    private static final ManagedCharacteristic CHARACTERISTIC_MAGNETOMETER =
-            new ManagedCharacteristic("555a0001-5003-467a-9538-01f0652c74e8", ValueType.SFLOAT_ARR);
-
-    private static final ManagedCharacteristic[] MANAGED_CHARACTERISTICS = {
-            CHARACTERISTIC_INPUT_1,
-            CHARACTERISTIC_INPUT_2,
-            CHARACTERISTIC_INPUT_3,
-            CHARACTERISTIC_VOLTAGE,
-            CHARACTERISTIC_CURRENT,
-            CHARACTERISTIC_RESISTANCE,
-            CHARACTERISTIC_TEMPERATURE,
-            CHARACTERISTIC_ACCELEROMETER,
-            CHARACTERISTIC_GYROSCOPE,
-            CHARACTERISTIC_MAGNETOMETER
-    };
-
-    private static final Map<String, List<Listener>> sListeners = new HashMap<>();
-
-    private static final Map<String, BluetoothGatt> sConnectedGattServices = new HashMap<>();
-
-    public static void subscribe(Context context, String address, Listener listener) {
-        synchronized (sListeners) {
-            List<Listener> listeners = sListeners.get(address);
-            if (listeners == null) {
-                listeners = new ArrayList<>();
-                sListeners.put(address, listeners);
-                connect(context, address);
-            }
-            listeners.add(listener);
-        }
-
-    }
-
-    public static void unsubscribe(String address, Listener listener) {
-        synchronized (sListeners) {
-            List<Listener> listeners = sListeners.get(address);
-            if (listeners != null && listeners.remove(listener)) {
-                if (listeners.size() == 0) {
-                    sListeners.remove(address);
-                    disconnect(address);
-                }
-            }
-        }
-    }
-
-    private static void connect(Context context, String address) {
-        BluetoothManager manager = (BluetoothManager) context.getSystemService(
-                Context.BLUETOOTH_SERVICE);
-        if (manager == null) {
-            return;
-        }
-        BluetoothAdapter adapter = manager.getAdapter();
-        BluetoothDevice device = adapter.getRemoteDevice(address);
-        device.connectGatt(context, true, new BluetoothGattCallback() {
-
-            private final List<CharacteristicItem> pendingCharacteristics = new ArrayList<>();
-
-            private final List<CharacteristicItem> subscribedCharacteristics = new ArrayList<>();
-
-            @Override
-            public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-                if (status == BluetoothGatt.GATT_SUCCESS
-                        && newState == BluetoothProfile.STATE_CONNECTED) {
-                    sConnectedGattServices.put(address, gatt);
-                    pendingCharacteristics.clear();
-                    subscribedCharacteristics.clear();
-                    gatt.discoverServices();
-                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                    gatt.disconnect();
-                }
-            }
-
-            @Override
-            public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-                BluetoothGattService service = gatt.getService(UUID.fromString(SERVICE_UUID));
-                if (service != null) {
-                    final List<CharacteristicItem> items = new ArrayList<>();
-                    List<BluetoothGattCharacteristic> characteristics =
-                            service.getCharacteristics();
-                    for (BluetoothGattCharacteristic characteristic : characteristics) {
-                        UUID uuid = characteristic.getUuid();
-                        for (ManagedCharacteristic c : MANAGED_CHARACTERISTICS) {
-                            if (c.uuid.equals(uuid)) {
-                                final CharacteristicItem item = new CharacteristicItem();
-                                item.managedCharacteristic = c;
-                                item.bluetoothCharacteristic = characteristic;
-                                items.add(item);
-                                break;
-                            }
-                        }
-                    }
-                    subscribedCharacteristics.addAll(items);
-                    pendingCharacteristics.addAll(items);
-                    subscribeNextCharacteristic(gatt);
-                }
-            }
-
-            private void subscribeNextCharacteristic(BluetoothGatt gatt) {
-                if (pendingCharacteristics.size() == 0) {
+    public static void subscribe(
+            Context context, String address, String characteristic, Listener listener) {
+        synchronized (sGattHandlers) {
+            GattHandler gattHandler = sGattHandlers.get(address);
+            if (gattHandler == null) {
+                BluetoothManager manager = (BluetoothManager) context.getSystemService(
+                        Context.BLUETOOTH_SERVICE);
+                if (manager == null) {
                     return;
                 }
-                CharacteristicItem item = pendingCharacteristics.remove(0);
-                gatt.setCharacteristicNotification(item.bluetoothCharacteristic, true);
-                BluetoothGattDescriptor descriptor = item.bluetoothCharacteristic.getDescriptor(
-                        UUID.fromString(("00002902-0000-1000-8000-00805f9b34fb")));
-                descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-                gatt.writeDescriptor(descriptor);
-                gatt.readCharacteristic(item.bluetoothCharacteristic);
+                BluetoothAdapter adapter = manager.getAdapter();
+                BluetoothDevice device = adapter.getRemoteDevice(address);
+                gattHandler = new GattHandler();
+                sGattHandlers.put(address, gattHandler);
+                device.connectGatt(context, true, gattHandler);
             }
+            gattHandler.subscribe(characteristic, listener);
+        }
+    }
 
-            @Override
-            public void onDescriptorWrite(
-                    BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
-                subscribeNextCharacteristic(gatt);
-            }
-
-            @Override
-            public void onCharacteristicRead(
-                    BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-                subscribeNextCharacteristic(gatt);
-            }
-
-            @Override
-            public void onCharacteristicChanged(
-                    BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-                synchronized (subscribedCharacteristics) {
-                    for (int i = 0; i < subscribedCharacteristics.size(); i++) {
-                        final CharacteristicItem item = subscribedCharacteristics.get(i);
-                        if (item.bluetoothCharacteristic.equals(characteristic)) {
-                            double[] values;
-                            try {
-                                values = parse(item.managedCharacteristic.valueType,
-                                        characteristic.getValue());
-                            } catch (Throwable t) {
-                                Log.e("MkrSciManager",
-                                        "Error parsing characteristic value", t);
-                                return;
-                            }
-                            notifyCharacteristicValues(address, item.managedCharacteristic, values);
+    public static void unsubscribe(String address, String characteristic, Listener listener) {
+        synchronized (sGattHandlers) {
+            GattHandler gattHandler = sGattHandlers.get(address);
+            if (gattHandler != null) {
+                gattHandler.unsubscribe(characteristic, listener);
+                sHandler.postDelayed(() -> {
+                    synchronized (sGattHandlers) {
+                        if (!gattHandler.hasSubscribers()) {
+                            sGattHandlers.remove(address);
+                            gattHandler.disconnect();
                         }
+                    }
+                }, 2000L);
+            }
+        }
+    }
+
+    private static class GattHandler extends BluetoothGattCallback {
+
+        private static final UUID NOTIFICATION_DESCRIPTOR = UUID.fromString(
+                "00002902-0000-1000-8000-00805f9b34fb");
+
+        private final Map<String, List<Listener>> mListeners = new HashMap<>();
+
+        private BluetoothGatt mGatt;
+
+        private final List<BluetoothGattCharacteristic> mCharacteristics = new ArrayList<>();
+
+        private final List<Runnable> mGattActions = new ArrayList<>();
+
+        private boolean mReadyForAction = false;
+
+        private boolean mBusy = false;
+
+        private void disconnect() {
+            if (mGatt != null) {
+                mGatt.disconnect();
+            }
+        }
+
+        private void subscribe(String characteristicUuid, Listener listener) {
+            boolean subscribe = false;
+            synchronized (mListeners) {
+                List<Listener> listeners = mListeners.get(characteristicUuid);
+                if (listeners == null) {
+                    listeners = new ArrayList<>();
+                    mListeners.put(characteristicUuid, listeners);
+                    subscribe = true;
+                }
+                listeners.add(listener);
+            }
+            if (subscribe) {
+                enqueueGattAction(() -> {
+                    BluetoothGattCharacteristic c = getCharacteristic(characteristicUuid);
+                    if (c != null) {
+                        mGatt.setCharacteristicNotification(c, true);
+                        BluetoothGattDescriptor d = c.getDescriptor(NOTIFICATION_DESCRIPTOR);
+                        d.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                        mGatt.writeDescriptor(d);
+                    }
+                });
+            }
+        }
+
+        private void unsubscribe(String characteristicUuid, Listener listener) {
+            boolean unsubscribe = false;
+            synchronized (mListeners) {
+                List<Listener> listeners = mListeners.get(characteristicUuid);
+                if (listeners != null) {
+                    listeners.remove(listener);
+                    if (listeners.size() == 0) {
+                        mListeners.remove(characteristicUuid);
+                        unsubscribe = true;
                     }
                 }
             }
-        });
-    }
-
-    private static void disconnect(String address) {
-        BluetoothGatt gatt = sConnectedGattServices.get(address);
-        if (gatt != null) {
-            gatt.disconnect();
-        }
-    }
-
-    private static void notifyCharacteristicValues(
-            String address, ManagedCharacteristic characteristic, double[] values) {
-        synchronized (sListeners) {
-            List<Listener> listeners = sListeners.get(address);
-            if (listeners == null) {
-                return;
+            if (unsubscribe) {
+                enqueueGattAction(() -> {
+                    BluetoothGattCharacteristic c = getCharacteristic(characteristicUuid);
+                    if (c != null) {
+                        mGatt.setCharacteristicNotification(c, true);
+                        BluetoothGattDescriptor d = c.getDescriptor(NOTIFICATION_DESCRIPTOR);
+                        d.setValue(BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE);
+                        mGatt.writeDescriptor(d);
+                    }
+                });
             }
-            if (CHARACTERISTIC_INPUT_1 == characteristic) {
-                if (values.length < 1) {
-                    return;
+        }
+
+        private boolean hasSubscribers() {
+            synchronized (mListeners) {
+                return mListeners.size() > 0;
+            }
+        }
+
+        private BluetoothGattCharacteristic getCharacteristic(String uuid) {
+            for (BluetoothGattCharacteristic aux : mCharacteristics) {
+                if (Objects.equals(uuid, aux.getUuid().toString())) {
+                    return aux;
                 }
-                Log.i("h42", "Input 1:" + values[0]);
-                for (Listener l : listeners) {
-                    l.onInput1Updated(values[0]);
+            }
+            return null;
+        }
+
+        private void enqueueGattAction(Runnable action) {
+            synchronized (mGattActions) {
+                if (mReadyForAction && !mBusy) {
+                    mBusy = true;
+                    action.run();
+                } else {
+                    mGattActions.add(action);
                 }
-            } else if (CHARACTERISTIC_INPUT_2 == characteristic) {
-                if (values.length < 1) {
-                    return;
+            }
+        }
+
+        private void onGattActionCompleted() {
+            synchronized (mGattActions) {
+                if (mReadyForAction && mGattActions.size() > 0) {
+                    mBusy = true;
+                    mGattActions.remove(0).run();
+                } else {
+                    mBusy = false;
                 }
-                Log.i("h42", "Input 2:" + values[0]);
-                for (Listener l : listeners) {
-                    l.onInput2Updated(values[0]);
-                }
-            } else if (CHARACTERISTIC_INPUT_3 == characteristic) {
-                if (values.length < 1) {
-                    return;
-                }
-                Log.i("h42", "Input 3:" + values[0]);
-                for (Listener l : listeners) {
-                    l.onInput3Updated(values[0]);
-                }
-            } else if (CHARACTERISTIC_VOLTAGE == characteristic) {
-                if (values.length < 1) {
-                    return;
-                }
-                Log.i("h42", "Voltage:" + values[0]);
-                for (Listener l : listeners) {
-                    l.onVoltageUpdated(values[0]);
-                }
-            } else if (CHARACTERISTIC_CURRENT == characteristic) {
-                if (values.length < 1) {
-                    return;
-                }
-                Log.i("h42", "Current:" + values[0]);
-                for (Listener l : listeners) {
-                    l.onCurrentUpdated(values[0]);
-                }
-            } else if (CHARACTERISTIC_RESISTANCE == characteristic) {
-                if (values.length < 1) {
-                    return;
-                }
-                Log.i("h42", "Resistance:" + values[0]);
-                for (Listener l : listeners) {
-                    l.onResistanceUpdated(values[0]);
-                }
-            } else if (CHARACTERISTIC_TEMPERATURE == characteristic) {
-                if (values.length < 1) {
-                    return;
-                }
-                Log.i("h42", "Temperature:" + values[0]);
-                for (Listener l : listeners) {
-                    l.onTemperatureUpdated(values[0]);
-                }
-            } else if (CHARACTERISTIC_ACCELEROMETER == characteristic) {
-                if (values.length < 3) {
-                    return;
-                }
-                Log.i("h42", "Accelerometer X:" + values[0]);
-                Log.i("h42", "Accelerometer Y:" + values[1]);
-                Log.i("h42", "Accelerometer Z:" + values[2]);
-                for (Listener l : listeners) {
-                    l.onAccelerometerUpdated(values[0], values[1], values[2]);
-                }
-            } else if (CHARACTERISTIC_GYROSCOPE == characteristic) {
-                if (values.length < 3) {
-                    return;
-                }
-                Log.i("h42", "Gyroscope X:" + values[0]);
-                Log.i("h42", "Gyroscope Y:" + values[1]);
-                Log.i("h42", "Gyroscope Z:" + values[2]);
-                for (Listener l : listeners) {
-                    l.onGyroscopeUpdated(values[0], values[1], values[2]);
-                }
-            } else if (CHARACTERISTIC_MAGNETOMETER == characteristic) {
-                if (values.length < 3) {
-                    return;
-                }
-                Log.i("h42", "Magnetometer X:" + values[0]);
-                Log.i("h42", "Magnetometer Y:" + values[1]);
-                Log.i("h42", "Magnetometer Z:" + values[2]);
-                for (Listener l : listeners) {
-                    l.onMagnetometerUpdated(values[0], values[1], values[2]);
+            }
+        }
+
+        @Override
+        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+            if (status == BluetoothGatt.GATT_SUCCESS
+                    && newState == BluetoothProfile.STATE_CONNECTED) {
+                mGatt = gatt;
+                mCharacteristics.clear();
+                mGatt.discoverServices();
+            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                mReadyForAction = false;
+                gatt.disconnect();
+                // TODO handle disconnection events
+            }
+        }
+
+        @Override
+        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+            BluetoothGattService service = gatt.getService(UUID.fromString(SERVICE_UUID));
+            if (service != null) {
+                mCharacteristics.addAll(service.getCharacteristics());
+            }
+            mReadyForAction = true;
+            onGattActionCompleted();
+        }
+
+        @Override
+        public void onDescriptorRead(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
+            onGattActionCompleted();
+        }
+
+        @Override
+        public void onDescriptorWrite(
+                BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
+            onGattActionCompleted();
+        }
+
+        @Override
+        public void onCharacteristicRead(
+                BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            onGattActionCompleted();
+        }
+
+        @Override
+        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            onGattActionCompleted();
+        }
+
+        @Override
+        public void onCharacteristicChanged(
+                BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+            final String uuid = characteristic.getUuid().toString();
+            final ValueType type;
+            switch (uuid) {
+                case INPUT_1_UUID:
+                case INPUT_2_UUID:
+                case INPUT_3_UUID:
+                    type = ValueType.UINT16;
+                    break;
+                case VOLTAGE_UUID:
+                case CURRENT_UUID:
+                case RESISTANCE_UUID:
+                    type = ValueType.SFLOAT;
+                    break;
+                case ACCELEROMETER_UUID:
+                case GYROSCOPE_UUID:
+                case MAGNETOMETER_UUID:
+                    type = ValueType.SFLOAT_ARR;
+                    break;
+                default:
+                    type = null;
+            }
+            if (type != null) {
+                final double[] values = parse(type, characteristic.getValue());
+                synchronized (mListeners) {
+                    List<Listener> listeners = mListeners.get(uuid);
+                    if (listeners != null) {
+                        for (Listener l : listeners) {
+                            l.onValuesUpdated(values);
+                        }
+                    }
                 }
             }
         }
@@ -375,41 +346,8 @@ public class MkrSciBleManager {
         UINT8, UINT16, UINT32, SFLOAT, SFLOAT_ARR
     }
 
-    private static class ManagedCharacteristic {
-        private UUID uuid;
-        private ValueType valueType;
-
-        private ManagedCharacteristic(String uuid, ValueType valueType) {
-            this.uuid = UUID.fromString(uuid);
-            this.valueType = valueType;
-        }
-    }
-
-    private static class CharacteristicItem {
-        private ManagedCharacteristic managedCharacteristic;
-        private BluetoothGattCharacteristic bluetoothCharacteristic;
-    }
-
     public interface Listener {
-        void onInput1Updated(double value);
-
-        void onInput2Updated(double value);
-
-        void onInput3Updated(double value);
-
-        void onVoltageUpdated(double value);
-
-        void onCurrentUpdated(double value);
-
-        void onResistanceUpdated(double value);
-
-        void onTemperatureUpdated(double value);
-
-        void onAccelerometerUpdated(double x, double y, double z);
-
-        void onGyroscopeUpdated(double x, double y, double z);
-
-        void onMagnetometerUpdated(double x, double y, double z);
+        void onValuesUpdated(double[] values);
     }
 
 }

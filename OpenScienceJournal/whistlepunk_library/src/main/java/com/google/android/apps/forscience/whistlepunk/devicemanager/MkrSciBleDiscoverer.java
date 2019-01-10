@@ -202,8 +202,6 @@ public class MkrSciBleDiscoverer implements SensorDiscoverer {
         addSensor(scanListener, address,
                 MkrSciBleSensor.SENSOR_RESISTANCE, "Resistance");
         addSensor(scanListener, address,
-                MkrSciBleSensor.SENSOR_TEMPERATURE, "Temperature");
-        addSensor(scanListener, address,
                 MkrSciBleSensor.SENSOR_ACCELEROMETER_X, "Accelerometer X");
         addSensor(scanListener, address,
                 MkrSciBleSensor.SENSOR_ACCELEROMETER_Y, "Accelerometer Y");
