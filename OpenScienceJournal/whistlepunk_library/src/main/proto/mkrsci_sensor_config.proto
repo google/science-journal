@@ -28,4 +28,6 @@ message MkrSciBleSensorConfig {
 
     optional string sensor = 2;
 
+    optional string handler = 3;
+
 }

@@ -31,9 +31,12 @@ public class MkrSciBleSensor extends ScalarSensor {
     public static final String SENSOR_GYROSCOPE_X = "6001_gyroscope_x";
     public static final String SENSOR_GYROSCOPE_Y = "6002_gyroscope_y";
     public static final String SENSOR_GYROSCOPE_Z = "6003_gyroscope_z";
-    public static final String SENSOR_MAGNETOMETER_X = "7001_magnetometer_x";
-    public static final String SENSOR_MAGNETOMETER_Y = "7002_magnetometer_y";
-    public static final String SENSOR_MAGNETOMETER_Z = "7003_magnetometer_z";
+    public static final String SENSOR_MAGNETOMETER = "7001_magnetometer";
+
+    public static final String HANDLER_RAW = "raw";
+    public static final String HANDLER_TEMPERATURE_CELSIUS = "temperature_celsius";
+    public static final String HANDLER_TEMPERATURE_FAHRENHEIT = "temperature_fahrenheit";
+    public static final String HANDLER_LIGHT = "light";
 
     private String mAddress;
 
@@ -94,17 +97,9 @@ public class MkrSciBleSensor extends ScalarSensor {
                 mCharacteristic = MkrSciBleManager.GYROSCOPE_UUID;
                 mValueHandler = new SimpleValueHandler(2);
                 break;
-            case SENSOR_MAGNETOMETER_X:
+            case SENSOR_MAGNETOMETER:
                 mCharacteristic = MkrSciBleManager.MAGNETOMETER_UUID;
-                mValueHandler = new SimpleValueHandler(0);
-                break;
-            case SENSOR_MAGNETOMETER_Y:
-                mCharacteristic = MkrSciBleManager.MAGNETOMETER_UUID;
-                mValueHandler = new SimpleValueHandler(1);
-                break;
-            case SENSOR_MAGNETOMETER_Z:
-                mCharacteristic = MkrSciBleManager.MAGNETOMETER_UUID;
-                mValueHandler = new SimpleValueHandler(2);
+                mValueHandler = new MagnetometerValueHandler();
                 break;
             default:
                 throw new RuntimeException("Unmanaged mkr sci ble sensor: " + sensorKind);
@@ -164,6 +159,16 @@ public class MkrSciBleSensor extends ScalarSensor {
             if (values.length > index) {
                 c.addData(ts, values[index]);
             }
+        }
+    }
+
+    private static class MagnetometerValueHandler implements ValueHandler {
+        @Override
+        public void handle(StreamConsumer c, long ts, double[] values) {
+            if (values.length < 3) {
+                return;
+            }
+            c.addData(ts, Math.sqrt(Math.pow(values[0], 2) + Math.pow(values[1], 2) + Math.pow(values[2], 2)));
         }
     }
 

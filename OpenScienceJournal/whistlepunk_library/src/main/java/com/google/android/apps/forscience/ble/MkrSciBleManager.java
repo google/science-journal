@@ -328,12 +328,14 @@ public class MkrSciBleManager {
             final int size = value.length / 4;
             final double[] array = new double[size];
             final ByteBuffer buffer = ByteBuffer.allocate(4);
+            int c = 0;
             for (int i = 0; i < size; i++) {
+                final int offset = 4 * i;
                 buffer.position(0);
-                buffer.put(value[3]);
-                buffer.put(value[2]);
-                buffer.put(value[1]);
-                buffer.put(value[0]);
+                buffer.put(value[3 + offset]);
+                buffer.put(value[2 + offset]);
+                buffer.put(value[1 + offset]);
+                buffer.put(value[offset]);
                 buffer.position(0);
                 array[i] = buffer.getFloat();
             }

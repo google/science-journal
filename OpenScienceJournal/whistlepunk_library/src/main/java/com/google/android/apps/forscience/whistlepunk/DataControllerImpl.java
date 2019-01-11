@@ -86,7 +86,7 @@ public class DataControllerImpl implements DataController, RecordingDataControll
                                 new Callable<Success>() {
                                     @Override
                                     public Success call() throws Exception {
-                                        mMetaDataManager.removeSensorFromExperiment(oldSensorId,
+                                        mMetaDataManager.eraseSensorFromExperiment(oldSensorId,
                                                 experimentId);
                                         mMetaDataManager.addSensorToExperiment(newSensorId,
                                                 experimentId);

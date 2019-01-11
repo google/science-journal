@@ -36,6 +36,8 @@ import com.google.android.apps.forscience.whistlepunk.metadata.MkrSciBleSensorSp
 import com.google.android.apps.forscience.whistlepunk.sensorapi.SensorChoice;
 import com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor;
 
+import java.util.Objects;
+
 /**
  * Discovers BLE sensors that speak the Arduino "MkrSci" Science Journal protocol.
  */
@@ -214,11 +216,7 @@ public class MkrSciBleDiscoverer implements SensorDiscoverer {
         addSensor(scanListener, address,
                 MkrSciBleSensor.SENSOR_GYROSCOPE_Z, "Gyroscope Z");
         addSensor(scanListener, address,
-                MkrSciBleSensor.SENSOR_MAGNETOMETER_X, "Magnetometer X");
-        addSensor(scanListener, address,
-                MkrSciBleSensor.SENSOR_MAGNETOMETER_Y, "Magnetometer Y");
-        addSensor(scanListener, address,
-                MkrSciBleSensor.SENSOR_MAGNETOMETER_Z, "Magnetometer Z");
+                MkrSciBleSensor.SENSOR_MAGNETOMETER, "Magnetometer");
     }
 
     private void addSensor(ScanListener scanListener, String address, String sensor, String name) {
@@ -231,6 +229,28 @@ public class MkrSciBleDiscoverer implements SensorDiscoverer {
 
             @Override
             public SettingsInterface getSettingsInterface() {
+                if (Objects.equals(sensor, MkrSciBleSensor.SENSOR_INPUT_1)) {
+                    return (experimentId, sensorId, fragmentManager, showForgetButton) ->
+                            MkrSciSensorOptionsDialog.newInstance(
+                                    experimentId, sensorId,
+                                    new String[]{
+                                            MkrSciBleSensor.HANDLER_TEMPERATURE_CELSIUS,
+                                            MkrSciBleSensor.HANDLER_TEMPERATURE_FAHRENHEIT,
+                                            MkrSciBleSensor.HANDLER_LIGHT,
+                                            MkrSciBleSensor.HANDLER_RAW
+                                    }, 3
+                            ).show(fragmentManager, "edit_sensor_input1");
+                }
+                if (Objects.equals(sensor, MkrSciBleSensor.SENSOR_INPUT_2)) {
+                    return (experimentId, sensorId, fragmentManager, showForgetButton) ->
+                            MkrSciSensorOptionsDialog.newInstance(
+                                    experimentId, sensorId,
+                                    new String[]{
+                                            MkrSciBleSensor.HANDLER_LIGHT,
+                                            MkrSciBleSensor.HANDLER_RAW
+                                    }, 1
+                            ).show(fragmentManager, "edit_sensor_input2");
+                }
                 return null;
             }
 
