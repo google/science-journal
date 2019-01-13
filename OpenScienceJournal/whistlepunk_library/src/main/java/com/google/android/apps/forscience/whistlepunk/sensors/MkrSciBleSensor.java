@@ -47,15 +47,36 @@ public class MkrSciBleSensor extends ScalarSensor {
     public MkrSciBleSensor(String sensorId, MkrSciBleSensorSpec spec) {
         super(sensorId, AppSingleton.getUiThreadExecutor());
         mAddress = spec.getAddress();
-        String sensorKind = spec.getSensor();
+        final String sensorKind = spec.getSensor();
+        final String sensorHandler = spec.getHandler();
         switch (sensorKind) {
             case SENSOR_INPUT_1:
                 mCharacteristic = MkrSciBleManager.INPUT_1_UUID;
-                mValueHandler = new SimpleValueHandler(0);
+                switch (sensorHandler) {
+                    case HANDLER_TEMPERATURE_CELSIUS:
+                        mValueHandler = new TemperatureCelsiusValueHandler(0);
+                        break;
+                    case HANDLER_TEMPERATURE_FAHRENHEIT:
+                        mValueHandler = new TemperatureFahrenheitValueHandler(0);
+                        break;
+                    case HANDLER_LIGHT:
+                        mValueHandler = new LightValueHandler(0);
+                        break;
+                    default:
+                        mValueHandler = new SimpleValueHandler(0);
+                        break;
+                }
                 break;
             case SENSOR_INPUT_2:
                 mCharacteristic = MkrSciBleManager.INPUT_2_UUID;
-                mValueHandler = new SimpleValueHandler(0);
+                switch (sensorHandler) {
+                    case HANDLER_LIGHT:
+                        mValueHandler = new LightValueHandler(0);
+                        break;
+                    default:
+                        mValueHandler = new SimpleValueHandler(0);
+                        break;
+                }
                 break;
             case SENSOR_INPUT_3:
                 mCharacteristic = MkrSciBleManager.INPUT_3_UUID;
@@ -75,15 +96,15 @@ public class MkrSciBleSensor extends ScalarSensor {
                 break;
             case SENSOR_ACCELEROMETER_X:
                 mCharacteristic = MkrSciBleManager.ACCELEROMETER_UUID;
-                mValueHandler = new SimpleValueHandler(0);
+                mValueHandler = new AccelerometerValueHandler(0);
                 break;
             case SENSOR_ACCELEROMETER_Y:
                 mCharacteristic = MkrSciBleManager.ACCELEROMETER_UUID;
-                mValueHandler = new SimpleValueHandler(1);
+                mValueHandler = new AccelerometerValueHandler(1);
                 break;
             case SENSOR_ACCELEROMETER_Z:
                 mCharacteristic = MkrSciBleManager.ACCELEROMETER_UUID;
-                mValueHandler = new SimpleValueHandler(2);
+                mValueHandler = new AccelerometerValueHandler(2);
                 break;
             case SENSOR_GYROSCOPE_X:
                 mCharacteristic = MkrSciBleManager.GYROSCOPE_UUID;
@@ -142,9 +163,7 @@ public class MkrSciBleSensor extends ScalarSensor {
     }
 
     private interface ValueHandler {
-
         void handle(StreamConsumer c, long ts, double[] values);
-
     }
 
     private static class SimpleValueHandler implements ValueHandler {
@@ -158,6 +177,67 @@ public class MkrSciBleSensor extends ScalarSensor {
         public void handle(StreamConsumer c, long ts, double[] values) {
             if (values.length > index) {
                 c.addData(ts, values[index]);
+            }
+        }
+    }
+
+    private static class TemperatureCelsiusValueHandler implements ValueHandler {
+        private int index;
+
+        private TemperatureCelsiusValueHandler(int index) {
+            this.index = index;
+        }
+
+        @Override
+        public void handle(StreamConsumer c, long ts, double[] values) {
+            if (values.length > index) {
+                c.addData(ts, (((values[index] * 3300d) / 1023d) - 500) / 10d);
+            }
+        }
+    }
+
+    private static class TemperatureFahrenheitValueHandler implements ValueHandler {
+        private int index;
+
+        private TemperatureFahrenheitValueHandler(int index) {
+            this.index = index;
+        }
+
+        @Override
+        public void handle(StreamConsumer c, long ts, double[] values) {
+            if (values.length > index) {
+                final double celsius = (((values[index] * 3300d) / 1023d) - 500) * 0.1d;
+                c.addData(ts, (celsius * (9d / 5d)) + 32d);
+            }
+        }
+    }
+
+    private static class LightValueHandler implements ValueHandler {
+        private int index;
+
+        private LightValueHandler(int index) {
+            this.index = index;
+        }
+
+        @Override
+        public void handle(StreamConsumer c, long ts, double[] values) {
+            if (values.length > index) {
+                c.addData(ts, ((values[index] * 3300d) / 1023d) * 0.5d);
+            }
+        }
+    }
+
+    private static class AccelerometerValueHandler implements ValueHandler {
+        private int index;
+
+        private AccelerometerValueHandler(int index) {
+            this.index = index;
+        }
+
+        @Override
+        public void handle(StreamConsumer c, long ts, double[] values) {
+            if (values.length > index) {
+                c.addData(ts, values[index] * 9.80665d);
             }
         }
     }

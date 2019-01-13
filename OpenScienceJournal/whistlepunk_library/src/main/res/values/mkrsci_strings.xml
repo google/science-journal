@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="input1" translatable="false">Input 1</string>
-    <string name="input2" translatable="false">Input 2</string>
-    <string name="input3" translatable="false">Input 3</string>
+    <string name="input_1" translatable="false">Input 1</string>
+    <string name="input_2" translatable="false">Input 2</string>
+    <string name="input_3" translatable="false">Input 3</string>
     <string name="voltage" translatable="false">Voltage</string>
     <string name="current" translatable="false">Current</string>
     <string name="resistance" translatable="false">Resistance</string>
     <string name="gyr_x" translatable="false">Gyroscope X</string>
     <string name="gyr_y" translatable="false">Gyroscope Y</string>
     <string name="gyr_z" translatable="false">Gyroscope Z</string>
+
+    <string name="temperature_c_units" translatable="false">\u00B0C</string>
+    <string name="temperature_f_units" translatable="false">\u00B0F</string>
+    <string name="current_units" translatable="false">A</string>
+    <string name="resistance_units" translatable="false">\u03A9</string>
+    <string name="gyr_units" translatable="false">\u00B0/s</string>
 
     <string name="mkrsci_input_sensor_raw" translatable="false">Raw</string>
     <string name="mkrsci_input_sensor_temperature_c" translatable="false">Temperature (Celsius)</string>

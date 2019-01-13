@@ -38,6 +38,24 @@ import com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor;
 
 import java.util.Objects;
 
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.HANDLER_LIGHT;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.HANDLER_RAW;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.HANDLER_TEMPERATURE_CELSIUS;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.HANDLER_TEMPERATURE_FAHRENHEIT;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_ACCELEROMETER_X;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_ACCELEROMETER_Y;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_ACCELEROMETER_Z;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_CURRENT;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_GYROSCOPE_X;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_GYROSCOPE_Y;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_GYROSCOPE_Z;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_INPUT_1;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_INPUT_2;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_INPUT_3;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_MAGNETOMETER;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_RESISTANCE;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_VOLTAGE;
+
 /**
  * Discovers BLE sensors that speak the Arduino "MkrSci" Science Journal protocol.
  */
@@ -191,32 +209,19 @@ public class MkrSciBleDiscoverer implements SensorDiscoverer {
             }
         });
 
-        addSensor(scanListener, address,
-                MkrSciBleSensor.SENSOR_INPUT_1, "Input 1");
-        addSensor(scanListener, address,
-                MkrSciBleSensor.SENSOR_INPUT_2, "Input 2");
-        addSensor(scanListener, address,
-                MkrSciBleSensor.SENSOR_INPUT_3, "Input 3");
-        addSensor(scanListener, address,
-                MkrSciBleSensor.SENSOR_VOLTAGE, "Voltage");
-        addSensor(scanListener, address,
-                MkrSciBleSensor.SENSOR_CURRENT, "Current");
-        addSensor(scanListener, address,
-                MkrSciBleSensor.SENSOR_RESISTANCE, "Resistance");
-        addSensor(scanListener, address,
-                MkrSciBleSensor.SENSOR_ACCELEROMETER_X, "Accelerometer X");
-        addSensor(scanListener, address,
-                MkrSciBleSensor.SENSOR_ACCELEROMETER_Y, "Accelerometer Y");
-        addSensor(scanListener, address,
-                MkrSciBleSensor.SENSOR_ACCELEROMETER_Z, "Accelerometer Z");
-        addSensor(scanListener, address,
-                MkrSciBleSensor.SENSOR_GYROSCOPE_X, "Gyroscope X");
-        addSensor(scanListener, address,
-                MkrSciBleSensor.SENSOR_GYROSCOPE_Y, "Gyroscope Y");
-        addSensor(scanListener, address,
-                MkrSciBleSensor.SENSOR_GYROSCOPE_Z, "Gyroscope Z");
-        addSensor(scanListener, address,
-                MkrSciBleSensor.SENSOR_MAGNETOMETER, "Magnetometer");
+        addSensor(scanListener, address, SENSOR_INPUT_1, mContext.getString(R.string.input_1));
+        addSensor(scanListener, address, SENSOR_INPUT_2, mContext.getString(R.string.input_2));
+        addSensor(scanListener, address, SENSOR_INPUT_3, mContext.getString(R.string.input_3));
+        addSensor(scanListener, address, SENSOR_VOLTAGE, mContext.getString(R.string.voltage));
+        addSensor(scanListener, address, SENSOR_CURRENT, mContext.getString(R.string.current));
+        addSensor(scanListener, address, SENSOR_RESISTANCE, mContext.getString(R.string.resistance));
+        addSensor(scanListener, address, SENSOR_ACCELEROMETER_X, mContext.getString(R.string.acc_x));
+        addSensor(scanListener, address, SENSOR_ACCELEROMETER_Y, mContext.getString(R.string.acc_y));
+        addSensor(scanListener, address, SENSOR_ACCELEROMETER_Z, mContext.getString(R.string.acc_z));
+        addSensor(scanListener, address, SENSOR_GYROSCOPE_X, mContext.getString(R.string.gyr_x));
+        addSensor(scanListener, address, SENSOR_GYROSCOPE_Y, mContext.getString(R.string.gyr_y));
+        addSensor(scanListener, address, SENSOR_GYROSCOPE_Z, mContext.getString(R.string.gyr_z));
+        addSensor(scanListener, address, SENSOR_MAGNETOMETER, mContext.getString(R.string.magnetic_field_strength));
     }
 
     private void addSensor(ScanListener scanListener, String address, String sensor, String name) {
@@ -229,25 +234,25 @@ public class MkrSciBleDiscoverer implements SensorDiscoverer {
 
             @Override
             public SettingsInterface getSettingsInterface() {
-                if (Objects.equals(sensor, MkrSciBleSensor.SENSOR_INPUT_1)) {
+                if (Objects.equals(sensor, SENSOR_INPUT_1)) {
                     return (experimentId, sensorId, fragmentManager, showForgetButton) ->
                             MkrSciSensorOptionsDialog.newInstance(
                                     experimentId, sensorId,
                                     new String[]{
-                                            MkrSciBleSensor.HANDLER_TEMPERATURE_CELSIUS,
-                                            MkrSciBleSensor.HANDLER_TEMPERATURE_FAHRENHEIT,
-                                            MkrSciBleSensor.HANDLER_LIGHT,
-                                            MkrSciBleSensor.HANDLER_RAW
+                                            HANDLER_TEMPERATURE_CELSIUS,
+                                            HANDLER_TEMPERATURE_FAHRENHEIT,
+                                            HANDLER_LIGHT,
+                                            HANDLER_RAW
                                     }, 3
                             ).show(fragmentManager, "edit_sensor_input1");
                 }
-                if (Objects.equals(sensor, MkrSciBleSensor.SENSOR_INPUT_2)) {
+                if (Objects.equals(sensor, SENSOR_INPUT_2)) {
                     return (experimentId, sensorId, fragmentManager, showForgetButton) ->
                             MkrSciSensorOptionsDialog.newInstance(
                                     experimentId, sensorId,
                                     new String[]{
-                                            MkrSciBleSensor.HANDLER_LIGHT,
-                                            MkrSciBleSensor.HANDLER_RAW
+                                            HANDLER_LIGHT,
+                                            HANDLER_RAW
                                     }, 1
                             ).show(fragmentManager, "edit_sensor_input2");
                 }

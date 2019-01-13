@@ -1,5 +1,6 @@
 package com.google.android.apps.forscience.whistlepunk.devicemanager;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
@@ -31,6 +32,8 @@ public class MkrSciSensorOptionsDialog extends DialogFragment {
 
     private RadioButton[] mRadioButtons;
 
+    private DeviceOptionsListener mListener;
+
     private DataController mDataController;
 
     private MkrSciBleSensorSpec mSensorSpec;
@@ -51,6 +54,7 @@ public class MkrSciSensorOptionsDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         mDataController = AppSingleton.getInstance(getActivity()).getDataController();
+        mListener = getOptionsListener();
 
         final Bundle args = getArguments();
         final String experimentId = args.getString(KEY_EXPERIMENT_ID);
@@ -88,7 +92,6 @@ public class MkrSciSensorOptionsDialog extends DialogFragment {
             mRadioButtons[i].setText(labelId);
             mRadioButtons[i].setOnClickListener(view1 -> {
                 mSensorSpec.setHandler(optionId);
-                saveSensorSpec(experimentId, sensorId);
             });
             radioGroup.addView(mRadioButtons[i], new RadioGroup.LayoutParams(
                     RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.WRAP_CONTENT));
@@ -100,7 +103,10 @@ public class MkrSciSensorOptionsDialog extends DialogFragment {
                 .setView(view)
                 .setTitle(R.string.title_activity_sensor_settings)
                 .setCancelable(true)
-                .setPositiveButton(android.R.string.ok, (dialog, i) -> dialog.dismiss());
+                .setPositiveButton(android.R.string.ok, (dialog, i) -> {
+                    saveSensorSpec(experimentId, sensorId);
+                    dialog.dismiss();
+                });
         return builder.create();
     }
 
@@ -134,9 +140,9 @@ public class MkrSciSensorOptionsDialog extends DialogFragment {
                                             TAG, "update experiment") {
                                         @Override
                                         public void success(Success value) {
-                                            DeviceOptionsListener l = getOptionsListener();
-                                            if (l != null) {
-                                                l.onExperimentSensorReplaced(sensorId, newSensorId);
+                                            if (mListener != null) {
+                                                mListener.onExperimentSensorReplaced(
+                                                        sensorId, newSensorId);
                                             }
                                         }
                                     });
@@ -146,7 +152,8 @@ public class MkrSciSensorOptionsDialog extends DialogFragment {
     }
 
     private DeviceOptionsListener getOptionsListener() {
-        if (getActivity() instanceof DeviceOptionsListener) {
+        Activity activity = getActivity();
+        if (activity instanceof DeviceOptionsListener) {
             return (DeviceOptionsListener) getActivity();
         } else {
             return null;

@@ -8,10 +8,26 @@ import com.google.android.apps.forscience.whistlepunk.SensorAnimationBehavior;
 import com.google.android.apps.forscience.whistlepunk.SensorAppearance;
 import com.google.android.apps.forscience.whistlepunk.data.GoosciMkrSciSensorConfig;
 import com.google.android.apps.forscience.whistlepunk.devicemanager.SensorTypeProvider;
-import com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor;
 import com.google.common.annotations.VisibleForTesting;
 
 import java.util.Objects;
+
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.HANDLER_LIGHT;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.HANDLER_TEMPERATURE_CELSIUS;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.HANDLER_TEMPERATURE_FAHRENHEIT;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_ACCELEROMETER_X;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_ACCELEROMETER_Y;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_ACCELEROMETER_Z;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_CURRENT;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_GYROSCOPE_X;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_GYROSCOPE_Y;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_GYROSCOPE_Z;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_INPUT_1;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_INPUT_2;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_INPUT_3;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_MAGNETOMETER;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_RESISTANCE;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_VOLTAGE;
 
 public class MkrSciBleSensorSpec extends ExternalSensorSpec {
     private static final String TAG = "MkrSciBleSensorSpec";
@@ -62,161 +78,231 @@ public class MkrSciBleSensorSpec extends ExternalSensorSpec {
 
     @Override
     public SensorAppearance getSensorAppearance() {
-        // TODO h42 getSensorAppearance
-        if (Objects.equals(mConfig.sensor, MkrSciBleSensor.SENSOR_INPUT_1)) {
+        if (Objects.equals(mConfig.sensor, SENSOR_INPUT_1)) {
+            if (Objects.equals(mConfig.handler, HANDLER_TEMPERATURE_CELSIUS)) {
+                return BuiltInSensorAppearance.create(
+                        R.string.input_1, // name
+                        R.drawable.ic_sensor_temperature_white_24dp, // icon
+                        R.string.temperature_c_units, // units
+                        0, // desc short
+                        0, // desc extended 1st part
+                        0, // desc extended 2nd part
+                        0,// desc extended image
+                        new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
+                                SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
+                        BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
+                        null // sensor id
+                );
+            }
+            if (Objects.equals(mConfig.handler, HANDLER_TEMPERATURE_FAHRENHEIT)) {
+                return BuiltInSensorAppearance.create(
+                        R.string.input_1, // name
+                        R.drawable.ic_sensor_temperature_white_24dp, // icon
+                        R.string.temperature_f_units, // units
+                        0, // desc short
+                        0, // desc extended 1st part
+                        0, // desc extended 2nd part
+                        0,// desc extended image
+                        new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
+                                SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
+                        BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
+                        null // sensor id
+                );
+            }
+            if (Objects.equals(mConfig.handler, HANDLER_LIGHT)) {
+                return BuiltInSensorAppearance.create(
+                        R.string.input_1, // name
+                        R.drawable.ic_sensor_light_white_24dp, // icon
+                        R.string.ambient_light_units, // units
+                        0, // desc short
+                        0, // desc extended 1st part
+                        0, // desc extended 2nd part
+                        0,// desc extended image
+                        new SensorAnimationBehavior(
+                                R.drawable.ambient_level_drawable,
+                                SensorAnimationBehavior.TYPE_RELATIVE_SCALE),
+                        BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
+                        null // sensor id
+                );
+            }
             return BuiltInSensorAppearance.create(
-                    R.string.input1, // name
+                    R.string.input_1, // name
                     R.drawable.ic_sensor_input_1_white_24dp, // icon
                     0, // units
                     0, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
                     0,// desc extended image
-                    null, // animation
+                    new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
+                            SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
                     null // sensor id
             );
         }
-        if (Objects.equals(mConfig.sensor, MkrSciBleSensor.SENSOR_INPUT_2)) {
+        if (Objects.equals(mConfig.sensor, SENSOR_INPUT_2)) {
+            if (Objects.equals(mConfig.handler, HANDLER_LIGHT)) {
+                return BuiltInSensorAppearance.create(
+                        R.string.input_2, // name
+                        R.drawable.ic_sensor_light_white_24dp, // icon
+                        R.string.ambient_light_units, // units
+                        0, // desc short
+                        0, // desc extended 1st part
+                        0, // desc extended 2nd part
+                        0,// desc extended image
+                        new SensorAnimationBehavior(
+                                R.drawable.ambient_level_drawable,
+                                SensorAnimationBehavior.TYPE_RELATIVE_SCALE),
+                        BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
+                        null // sensor id
+                );
+            }
             return BuiltInSensorAppearance.create(
-                    R.string.input2, // name
+                    R.string.input_2, // name
                     R.drawable.ic_sensor_input_2_white_24dp, // icon
                     0, // units
                     0, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
                     0,// desc extended image
-                    null, // animation
+                    new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
+                            SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
                     null // sensor id
             );
         }
-        if (Objects.equals(mConfig.sensor, MkrSciBleSensor.SENSOR_INPUT_3)) {
+        if (Objects.equals(mConfig.sensor, SENSOR_INPUT_3)) {
             return BuiltInSensorAppearance.create(
-                    R.string.input3, // name
+                    R.string.input_3, // name
                     R.drawable.ic_sensor_input_3_white_24dp, // icon
                     0, // units
                     0, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
                     0,// desc extended image
-                    null, // animation
+                    new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
+                            SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
                     null // sensor id
             );
         }
-        if (Objects.equals(mConfig.sensor, MkrSciBleSensor.SENSOR_VOLTAGE)) {
+        if (Objects.equals(mConfig.sensor, SENSOR_VOLTAGE)) {
             return BuiltInSensorAppearance.create(
                     R.string.voltage, // name
                     R.drawable.ic_sensor_voltage_white_24dp, // icon
-                    0, // units
+                    R.string.voltage_units, // units
                     0, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
                     0,// desc extended image
-                    null, // animation
+                    new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
+                            SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
                     null // sensor id
             );
         }
-        if (Objects.equals(mConfig.sensor, MkrSciBleSensor.SENSOR_CURRENT)) {
+        if (Objects.equals(mConfig.sensor, SENSOR_CURRENT)) {
             return BuiltInSensorAppearance.create(
                     R.string.current, // name
                     R.drawable.ic_sensor_current_white_24dp, // icon
-                    0, // units
+                    R.string.current_units, // units
                     0, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
                     0,// desc extended image
-                    null, // animation
+                    new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
+                            SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
                     null // sensor id
             );
         }
-        if (Objects.equals(mConfig.sensor, MkrSciBleSensor.SENSOR_RESISTANCE)) {
+        if (Objects.equals(mConfig.sensor, SENSOR_RESISTANCE)) {
             return BuiltInSensorAppearance.create(
                     R.string.resistance, // name
                     R.drawable.ic_sensor_resistance_white_24dp, // icon
-                    0, // units
+                    R.string.resistance_units, // units
                     0, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
                     0,// desc extended image
-                    null, // animation
+                    new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
+                            SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
                     null // sensor id
             );
         }
-        if (Objects.equals(mConfig.sensor, MkrSciBleSensor.SENSOR_ACCELEROMETER_X)) {
+        if (Objects.equals(mConfig.sensor, SENSOR_ACCELEROMETER_X)) {
             return BuiltInSensorAppearance.create(
                     R.string.acc_x, R.drawable.ic_sensor_acc_x_white_24dp, R.string.acc_units,
                     R.string.sensor_desc_short_acc_x, R.string.sensor_desc_first_paragraph_acc,
                     R.string.sensor_desc_second_paragraph_acc, R.drawable.learnmore_acc,
-                    new SensorAnimationBehavior(R.drawable.accx_level_drawable,
+                    new SensorAnimationBehavior(R.drawable.mkrsci_accx_level_drawable,
                             SensorAnimationBehavior.TYPE_ACCELEROMETER_SCALE_ROTATES),
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, null);
         }
-        if (Objects.equals(mConfig.sensor, MkrSciBleSensor.SENSOR_ACCELEROMETER_Y)) {
+        if (Objects.equals(mConfig.sensor, SENSOR_ACCELEROMETER_Y)) {
             return BuiltInSensorAppearance.create(
                     R.string.acc_y, R.drawable.ic_sensor_acc_y_white_24dp, R.string.acc_units,
                     R.string.sensor_desc_short_acc_y, R.string.sensor_desc_first_paragraph_acc,
                     R.string.sensor_desc_second_paragraph_acc, R.drawable.learnmore_acc,
-                    new SensorAnimationBehavior(R.drawable.accy_level_drawable,
+                    new SensorAnimationBehavior(R.drawable.mkrsci_accy_level_drawable,
                             SensorAnimationBehavior.TYPE_ACCELEROMETER_SCALE_ROTATES),
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, null);
         }
-        if (Objects.equals(mConfig.sensor, MkrSciBleSensor.SENSOR_ACCELEROMETER_Z)) {
+        if (Objects.equals(mConfig.sensor, SENSOR_ACCELEROMETER_Z)) {
             return BuiltInSensorAppearance.create(
                     R.string.acc_z, R.drawable.ic_sensor_acc_z_white_24dp, R.string.acc_units,
                     R.string.sensor_desc_short_acc_z, R.string.sensor_desc_first_paragraph_acc,
                     R.string.sensor_desc_second_paragraph_acc, R.drawable.learnmore_acc,
-                    new SensorAnimationBehavior(R.drawable.accz_level_drawable,
+                    new SensorAnimationBehavior(R.drawable.mkrsci_accz_level_drawable,
                             SensorAnimationBehavior.TYPE_ACCELEROMETER_SCALE_ROTATES),
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, null);
         }
-        if (Objects.equals(mConfig.sensor, MkrSciBleSensor.SENSOR_GYROSCOPE_X)) {
+        if (Objects.equals(mConfig.sensor, SENSOR_GYROSCOPE_X)) {
             return BuiltInSensorAppearance.create(
                     R.string.gyr_x, // name
                     R.drawable.ic_sensor_gyr_x_white_24dp, // icon
-                    0, // units
+                    R.string.gyr_units, // units
                     0, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
                     0,// desc extended image
-                    null, // animation
+                    new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
+                            SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
                     null // sensor id
             );
         }
-        if (Objects.equals(mConfig.sensor, MkrSciBleSensor.SENSOR_GYROSCOPE_Y)) {
+        if (Objects.equals(mConfig.sensor, SENSOR_GYROSCOPE_Y)) {
             return BuiltInSensorAppearance.create(
                     R.string.gyr_y, // name
                     R.drawable.ic_sensor_gyr_y_white_24dp, // icon
-                    0, // units
+                    R.string.gyr_units, // units
                     0, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
                     0,// desc extended image
-                    null, // animation
+                    new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
+                            SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
                     null // sensor id
             );
         }
-        if (Objects.equals(mConfig.sensor, MkrSciBleSensor.SENSOR_GYROSCOPE_Z)) {
+        if (Objects.equals(mConfig.sensor, SENSOR_GYROSCOPE_Z)) {
             return BuiltInSensorAppearance.create(
                     R.string.gyr_z, // name
                     R.drawable.ic_sensor_gyr_z_white_24dp, // icon
-                    0, // units
+                    R.string.gyr_units, // units
                     0, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
                     0,// desc extended image
-                    null, // animation
+                    new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
+                            SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
                     null // sensor id
             );
         }
-        if (Objects.equals(mConfig.sensor, MkrSciBleSensor.SENSOR_MAGNETOMETER)) {
+        if (Objects.equals(mConfig.sensor, SENSOR_MAGNETOMETER)) {
             return BuiltInSensorAppearance.create(
                     R.string.magnetic_field_strength,
                     R.drawable.ic_sensor_magnet_white_24dp,
