@@ -79,7 +79,7 @@ public class ConnectableSensorRegistry {
     private int mKeyNum = 0;
     private String mExperimentId = null;
     private Clock mClock;
-    private DeviceOptionsDialog.DeviceOptionsListener mOptionsListener;
+    private DeviceOptionsListener mOptionsListener;
     private DeviceRegistry mDeviceRegistry;
     private final SensorAppearanceProvider mAppearanceProvider;
     private UsageTracker mUsageTracker;
@@ -90,7 +90,7 @@ public class ConnectableSensorRegistry {
     public ConnectableSensorRegistry(DataController dataController,
                                      Map<String, SensorDiscoverer> discoverers, DevicesPresenter presenter,
                                      Scheduler scheduler, Clock clock,
-                                     DeviceOptionsDialog.DeviceOptionsListener optionsListener,
+                                     DeviceOptionsListener optionsListener,
                                      DeviceRegistry deviceRegistry, SensorAppearanceProvider appearanceProvider,
                                      UsageTracker usageTracker, ConnectableSensor.Connector connector) {
         mDataController = dataController;

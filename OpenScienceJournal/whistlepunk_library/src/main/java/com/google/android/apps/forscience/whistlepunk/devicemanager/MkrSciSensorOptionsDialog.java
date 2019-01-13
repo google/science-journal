@@ -134,12 +134,23 @@ public class MkrSciSensorOptionsDialog extends DialogFragment {
                                             TAG, "update experiment") {
                                         @Override
                                         public void success(Success value) {
-                                            // ok
+                                            DeviceOptionsListener l = getOptionsListener();
+                                            if (l != null) {
+                                                l.onExperimentSensorReplaced(sensorId, newSensorId);
+                                            }
                                         }
                                     });
                         }
                     }
                 });
+    }
+
+    private DeviceOptionsListener getOptionsListener() {
+        if (getActivity() instanceof DeviceOptionsListener) {
+            return (DeviceOptionsListener) getActivity();
+        } else {
+            return null;
+        }
     }
 
 }
