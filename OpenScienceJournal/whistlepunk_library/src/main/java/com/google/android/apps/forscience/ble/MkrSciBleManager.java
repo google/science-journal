@@ -12,7 +12,6 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;

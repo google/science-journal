@@ -31,7 +31,7 @@ import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSe
 
 public class MkrSciBleSensorSpec extends ExternalSensorSpec {
     private static final String TAG = "MkrSciBleSensorSpec";
-    public static final String TYPE = "mkrsci_bluetooth_le";
+    public static final String TYPE = MkrSciBleDeviceSpec.TYPE;
 
     private String mName;
 

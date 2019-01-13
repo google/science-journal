@@ -33,7 +33,6 @@ public class MkrSciBleDeviceSpec extends ExternalSensorSpec {
 
     @Override
     public SensorAppearance getSensorAppearance() {
-        // TODO carlo: getSensorAppearance
         return SensorTypeProvider.getSensorAppearance(SensorTypeProvider.TYPE_CUSTOM, mName);
     }
 
