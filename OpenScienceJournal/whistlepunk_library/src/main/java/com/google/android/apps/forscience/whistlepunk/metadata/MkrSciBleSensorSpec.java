@@ -88,7 +88,7 @@ public class MkrSciBleSensorSpec extends ExternalSensorSpec {
                         0, // desc extended 1st part
                         0, // desc extended 2nd part
                         0,// desc extended image
-                        new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
+                        new SensorAnimationBehavior(R.drawable.mkrsci_temperature_level_drawable,
                                 SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
                         BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
                         null // sensor id
@@ -103,7 +103,7 @@ public class MkrSciBleSensorSpec extends ExternalSensorSpec {
                         0, // desc extended 1st part
                         0, // desc extended 2nd part
                         0,// desc extended image
-                        new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
+                        new SensorAnimationBehavior(R.drawable.mkrsci_temperature_level_drawable,
                                 SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
                         BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
                         null // sensor id
