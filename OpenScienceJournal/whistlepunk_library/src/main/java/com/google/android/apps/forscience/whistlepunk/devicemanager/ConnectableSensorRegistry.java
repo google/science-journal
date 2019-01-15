@@ -17,6 +17,7 @@ package com.google.android.apps.forscience.whistlepunk.devicemanager;
 
 import android.support.annotation.NonNull;
 import android.util.ArrayMap;
+import android.util.Log;
 
 import com.google.android.apps.forscience.javalib.Consumer;
 import com.google.android.apps.forscience.javalib.Delay;
@@ -610,6 +611,8 @@ public class ConnectableSensorRegistry {
                         if (sensorKeys.size() == 1) {
                             pair(sensorKeys.get(0));
                         } else {
+                            final int length = sensorKeys.size();
+                            final int[] counter = {0};
                             for (String key : sensorKeys) {
                                 addSensorIfNecessary(key, getPairedGroup().getSensorCount(),
                                         new LoggingConsumer<ConnectableSensor>(TAG, "add sensor to experiment") {
@@ -621,7 +624,10 @@ public class ConnectableSensorRegistry {
                                             @Override
                                             public void success(Success value) {
                                                 sensor.setPaired(false);
-                                                refresh(false, sr);
+                                                counter[0]++;
+                                                if (counter[0] == length) {
+                                                    refresh(false, sr);
+                                                }
                                             }
                                         });
                                     }
