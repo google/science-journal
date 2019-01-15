@@ -190,7 +190,7 @@ public class MkrSciBleSensorSpec extends ExternalSensorSpec {
                     R.string.voltage, // name
                     R.drawable.ic_sensor_voltage_white_24dp, // icon
                     R.string.voltage_units, // units
-                    0, // desc short
+                    R.string.sensor_desc_short_mkrsci_voltage, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
                     0,// desc extended image
@@ -205,7 +205,7 @@ public class MkrSciBleSensorSpec extends ExternalSensorSpec {
                     R.string.current, // name
                     R.drawable.ic_sensor_current_white_24dp, // icon
                     R.string.current_units, // units
-                    0, // desc short
+                    R.string.sensor_desc_short_mkrsci_current, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
                     0,// desc extended image
@@ -220,7 +220,7 @@ public class MkrSciBleSensorSpec extends ExternalSensorSpec {
                     R.string.resistance, // name
                     R.drawable.ic_sensor_resistance_white_24dp, // icon
                     R.string.resistance_units, // units
-                    0, // desc short
+                    R.string.sensor_desc_short_mkrsci_resistance, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
                     0,// desc extended image
@@ -232,37 +232,55 @@ public class MkrSciBleSensorSpec extends ExternalSensorSpec {
         }
         if (Objects.equals(mConfig.sensor, SENSOR_ACCELEROMETER_X)) {
             return BuiltInSensorAppearance.create(
-                    R.string.acc_x, R.drawable.ic_sensor_acc_x_white_24dp, R.string.acc_units,
-                    R.string.sensor_desc_short_acc_x, R.string.sensor_desc_first_paragraph_acc,
-                    R.string.sensor_desc_second_paragraph_acc, R.drawable.learnmore_acc,
+                    R.string.acc_x,
+                    R.drawable.ic_sensor_acc_x_white_24dp,
+                    R.string.acc_units,
+                    R.string.sensor_desc_short_mkrsci_acc,
+                    0,
+                    0,
+                    0,
                     new SensorAnimationBehavior(R.drawable.mkrsci_accx_level_drawable,
                             SensorAnimationBehavior.TYPE_ACCELEROMETER_SCALE_ROTATES),
-                    BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, null);
+                    BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL,
+                    null
+            );
         }
         if (Objects.equals(mConfig.sensor, SENSOR_ACCELEROMETER_Y)) {
             return BuiltInSensorAppearance.create(
-                    R.string.acc_y, R.drawable.ic_sensor_acc_y_white_24dp, R.string.acc_units,
-                    R.string.sensor_desc_short_acc_y, R.string.sensor_desc_first_paragraph_acc,
-                    R.string.sensor_desc_second_paragraph_acc, R.drawable.learnmore_acc,
+                    R.string.acc_y,
+                    R.drawable.ic_sensor_acc_y_white_24dp,
+                    R.string.acc_units,
+                    R.string.sensor_desc_short_mkrsci_acc,
+                    0,
+                    0,
+                    0,
                     new SensorAnimationBehavior(R.drawable.mkrsci_accy_level_drawable,
                             SensorAnimationBehavior.TYPE_ACCELEROMETER_SCALE_ROTATES),
-                    BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, null);
+                    BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL,
+                    null
+            );
         }
         if (Objects.equals(mConfig.sensor, SENSOR_ACCELEROMETER_Z)) {
             return BuiltInSensorAppearance.create(
-                    R.string.acc_z, R.drawable.ic_sensor_acc_z_white_24dp, R.string.acc_units,
-                    R.string.sensor_desc_short_acc_z, R.string.sensor_desc_first_paragraph_acc,
-                    R.string.sensor_desc_second_paragraph_acc, R.drawable.learnmore_acc,
-                    new SensorAnimationBehavior(R.drawable.mkrsci_accz_level_drawable,
+                    R.string.acc_z,
+                    R.drawable.ic_sensor_acc_z_white_24dp,
+                    R.string.acc_units,
+                    R.string.sensor_desc_short_mkrsci_acc,
+                    0,
+                    0,
+                    0,
+                    new SensorAnimationBehavior(R.drawable.mkrsci_accy_level_drawable,
                             SensorAnimationBehavior.TYPE_ACCELEROMETER_SCALE_ROTATES),
-                    BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, null);
+                    BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL,
+                    null
+            );
         }
         if (Objects.equals(mConfig.sensor, SENSOR_GYROSCOPE_X)) {
             return BuiltInSensorAppearance.create(
                     R.string.gyr_x, // name
                     R.drawable.ic_sensor_gyr_x_white_24dp, // icon
                     R.string.gyr_units, // units
-                    0, // desc short
+                    R.string.sensor_desc_short_mkrsci_gyr, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
                     0,// desc extended image
@@ -277,7 +295,7 @@ public class MkrSciBleSensorSpec extends ExternalSensorSpec {
                     R.string.gyr_y, // name
                     R.drawable.ic_sensor_gyr_y_white_24dp, // icon
                     R.string.gyr_units, // units
-                    0, // desc short
+                    R.string.sensor_desc_short_mkrsci_gyr, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
                     0,// desc extended image
@@ -292,7 +310,7 @@ public class MkrSciBleSensorSpec extends ExternalSensorSpec {
                     R.string.gyr_z, // name
                     R.drawable.ic_sensor_gyr_z_white_24dp, // icon
                     R.string.gyr_units, // units
-                    0, // desc short
+                    R.string.sensor_desc_short_mkrsci_gyr, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
                     0,// desc extended image
@@ -307,7 +325,7 @@ public class MkrSciBleSensorSpec extends ExternalSensorSpec {
                     R.string.magnetic_field_strength,
                     R.drawable.ic_sensor_magnet_white_24dp,
                     R.string.magnetic_strength_units,
-                    0,
+                    R.string.sensor_desc_short_mkrsci_magnetometer, // desc short
                     0,
                     0,
                     0,

@@ -22,4 +22,11 @@
     <string name="mkrsci_input_sensor_temperature_f" translatable="false">Temperature (Fahrenheit)</string>
     <string name="mkrsci_input_sensor_light" translatable="false">Light</string>
 
+    <string name="sensor_desc_short_mkrsci_acc" translatable="false">A device that measures acceleration</string>
+    <string name="sensor_desc_short_mkrsci_current" translatable="false">The amount of flow of charged particles between two places</string>
+    <string name="sensor_desc_short_mkrsci_gyr" translatable="false">A device that measures orientation and angular velocity (rotation).</string>
+    <string name="sensor_desc_short_mkrsci_magnetometer" translatable="false">An instrument used to measure the intensity and direction of a magnetic field</string>
+    <string name="sensor_desc_short_mkrsci_resistance" translatable="false">The measure of the difficulty of current flow through an object or material</string>
+    <string name="sensor_desc_short_mkrsci_voltage" translatable="false">The difference in electric potential between two places that allows a current to flow</string>
+
 </resources>
