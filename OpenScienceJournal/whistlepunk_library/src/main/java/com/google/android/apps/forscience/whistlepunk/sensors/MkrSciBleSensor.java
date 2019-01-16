@@ -28,6 +28,7 @@ public class MkrSciBleSensor extends ScalarSensor {
     public static final String SENSOR_ACCELEROMETER_X = "5000_accelerometer_x";
     public static final String SENSOR_ACCELEROMETER_Y = "5001_accelerometer_y";
     public static final String SENSOR_ACCELEROMETER_Z = "5002_accelerometer_z";
+    public static final String SENSOR_LINEAR_ACCELEROMETER = "5003_linear_accelerometer";
     public static final String SENSOR_GYROSCOPE_X = "6001_gyroscope_x";
     public static final String SENSOR_GYROSCOPE_Y = "6002_gyroscope_y";
     public static final String SENSOR_GYROSCOPE_Z = "6003_gyroscope_z";
@@ -106,6 +107,10 @@ public class MkrSciBleSensor extends ScalarSensor {
                 mCharacteristic = MkrSciBleManager.ACCELEROMETER_UUID;
                 mValueHandler = new AccelerometerValueHandler(2);
                 break;
+            case SENSOR_LINEAR_ACCELEROMETER:
+                mCharacteristic = MkrSciBleManager.ACCELEROMETER_UUID;
+                mValueHandler = new VectorValueHandler();
+                break;
             case SENSOR_GYROSCOPE_X:
                 mCharacteristic = MkrSciBleManager.GYROSCOPE_UUID;
                 mValueHandler = new SimpleValueHandler(0);
@@ -120,7 +125,7 @@ public class MkrSciBleSensor extends ScalarSensor {
                 break;
             case SENSOR_MAGNETOMETER:
                 mCharacteristic = MkrSciBleManager.MAGNETOMETER_UUID;
-                mValueHandler = new MagnetometerValueHandler();
+                mValueHandler = new VectorValueHandler();
                 break;
             default:
                 throw new RuntimeException("Unmanaged mkr sci ble sensor: " + sensorKind);
@@ -242,13 +247,14 @@ public class MkrSciBleSensor extends ScalarSensor {
         }
     }
 
-    private static class MagnetometerValueHandler implements ValueHandler {
+    private static class VectorValueHandler implements ValueHandler {
         @Override
         public void handle(StreamConsumer c, long ts, double[] values) {
             if (values.length < 3) {
                 return;
             }
-            c.addData(ts, Math.sqrt(Math.pow(values[0], 2) + Math.pow(values[1], 2) + Math.pow(values[2], 2)));
+            c.addData(ts, Math.sqrt(
+                    (values[0] * values[0]) + (values[1] * values[1]) + (values[2] * values[2])));
         }
     }
 

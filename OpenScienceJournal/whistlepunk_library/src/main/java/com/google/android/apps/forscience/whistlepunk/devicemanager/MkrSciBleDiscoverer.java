@@ -52,6 +52,7 @@ import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSe
 import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_INPUT_1;
 import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_INPUT_2;
 import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_INPUT_3;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_LINEAR_ACCELEROMETER;
 import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_MAGNETOMETER;
 import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_RESISTANCE;
 import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_VOLTAGE;
@@ -218,6 +219,7 @@ public class MkrSciBleDiscoverer implements SensorDiscoverer {
         addSensor(scanListener, address, SENSOR_ACCELEROMETER_X, mContext.getString(R.string.acc_x));
         addSensor(scanListener, address, SENSOR_ACCELEROMETER_Y, mContext.getString(R.string.acc_y));
         addSensor(scanListener, address, SENSOR_ACCELEROMETER_Z, mContext.getString(R.string.acc_z));
+        addSensor(scanListener, address, SENSOR_LINEAR_ACCELEROMETER, mContext.getString(R.string.linear_accelerometer));
         addSensor(scanListener, address, SENSOR_GYROSCOPE_X, mContext.getString(R.string.gyr_x));
         addSensor(scanListener, address, SENSOR_GYROSCOPE_Y, mContext.getString(R.string.gyr_y));
         addSensor(scanListener, address, SENSOR_GYROSCOPE_Z, mContext.getString(R.string.gyr_z));

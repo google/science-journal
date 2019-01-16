@@ -258,11 +258,22 @@ public class MkrSciBleManager {
             }
             if (type != null) {
                 final double[] values = parse(type, characteristic.getValue());
-                synchronized (mListeners) {
-                    List<Listener> listeners = mListeners.get(uuid);
-                    if (listeners != null) {
-                        for (Listener l : listeners) {
-                            l.onValuesUpdated(values);
+                if (values != null) {
+                    // filter to avoid too large values blocking the UI
+                    for (int i = 0; i < values.length; i++) {
+                        if (values[i] > MAX_VALUE) {
+                            values[i] = MAX_VALUE;
+                        } else if (values[i] < MIN_VALUE) {
+                            values[i] = MIN_VALUE;
+                        }
+                    }
+                    // delivering to listener(s)
+                    synchronized (mListeners) {
+                        List<Listener> listeners = mListeners.get(uuid);
+                        if (listeners != null) {
+                            for (Listener l : listeners) {
+                                l.onValuesUpdated(values);
+                            }
                         }
                     }
                 }
@@ -350,5 +361,8 @@ public class MkrSciBleManager {
     public interface Listener {
         void onValuesUpdated(double[] values);
     }
+
+    private static final double MAX_VALUE = 2000000000D;
+    private static final double MIN_VALUE = -2000000000D;
 
 }

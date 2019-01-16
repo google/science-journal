@@ -25,6 +25,7 @@ import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSe
 import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_INPUT_1;
 import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_INPUT_2;
 import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_INPUT_3;
+import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_LINEAR_ACCELEROMETER;
 import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_MAGNETOMETER;
 import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_RESISTANCE;
 import static com.google.android.apps.forscience.whistlepunk.sensors.MkrSciBleSensor.SENSOR_VOLTAGE;
@@ -271,6 +272,21 @@ public class MkrSciBleSensorSpec extends ExternalSensorSpec {
                     0,
                     new SensorAnimationBehavior(R.drawable.mkrsci_accy_level_drawable,
                             SensorAnimationBehavior.TYPE_ACCELEROMETER_SCALE_ROTATES),
+                    BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL,
+                    null
+            );
+        }
+        if (Objects.equals(mConfig.sensor, SENSOR_LINEAR_ACCELEROMETER)) {
+            return BuiltInSensorAppearance.create(
+                    R.string.linear_accelerometer,
+                    R.drawable.ic_sensor_linacc_white_24dp,
+                    R.string.acc_units,
+                    R.string.sensor_desc_short_mkrsci_acc,
+                    0,
+                    0,
+                    0,
+                    new SensorAnimationBehavior(R.drawable.linacc_level_drawable,
+                            SensorAnimationBehavior.TYPE_POSITIVE_RELATIVE_SCALE),
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL,
                     null
             );
