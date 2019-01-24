@@ -196,7 +196,7 @@ public class MkrSciBleSensor extends ScalarSensor {
         @Override
         public void handle(StreamConsumer c, long ts, double[] values) {
             if (values.length > index) {
-                c.addData(ts, (((values[index] * 3300d) / 1023d) - 500) / 10d);
+                c.addData(ts, (((values[index] * 3300d) / 1023d) - 500) * 0.1d);
             }
         }
     }

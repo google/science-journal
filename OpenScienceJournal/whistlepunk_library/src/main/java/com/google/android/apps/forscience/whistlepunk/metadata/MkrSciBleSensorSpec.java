@@ -88,7 +88,7 @@ public class MkrSciBleSensorSpec extends ExternalSensorSpec {
                         0, // desc short
                         0, // desc extended 1st part
                         0, // desc extended 2nd part
-                        0,// desc extended image
+                        0, // desc extended image
                         new SensorAnimationBehavior(R.drawable.mkrsci_temperature_level_drawable,
                                 SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
                         BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
@@ -103,7 +103,7 @@ public class MkrSciBleSensorSpec extends ExternalSensorSpec {
                         0, // desc short
                         0, // desc extended 1st part
                         0, // desc extended 2nd part
-                        0,// desc extended image
+                        0, // desc extended image
                         new SensorAnimationBehavior(R.drawable.mkrsci_temperature_level_drawable,
                                 SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
                         BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
@@ -118,7 +118,7 @@ public class MkrSciBleSensorSpec extends ExternalSensorSpec {
                         0, // desc short
                         0, // desc extended 1st part
                         0, // desc extended 2nd part
-                        0,// desc extended image
+                        0, // desc extended image
                         new SensorAnimationBehavior(
                                 R.drawable.ambient_level_drawable,
                                 SensorAnimationBehavior.TYPE_RELATIVE_SCALE),
@@ -133,7 +133,7 @@ public class MkrSciBleSensorSpec extends ExternalSensorSpec {
                     0, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
-                    0,// desc extended image
+                    0, // desc extended image
                     new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
                             SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
@@ -149,7 +149,7 @@ public class MkrSciBleSensorSpec extends ExternalSensorSpec {
                         0, // desc short
                         0, // desc extended 1st part
                         0, // desc extended 2nd part
-                        0,// desc extended image
+                        0, // desc extended image
                         new SensorAnimationBehavior(
                                 R.drawable.ambient_level_drawable,
                                 SensorAnimationBehavior.TYPE_RELATIVE_SCALE),
@@ -164,7 +164,7 @@ public class MkrSciBleSensorSpec extends ExternalSensorSpec {
                     0, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
-                    0,// desc extended image
+                    0, // desc extended image
                     new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
                             SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
@@ -179,7 +179,7 @@ public class MkrSciBleSensorSpec extends ExternalSensorSpec {
                     0, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
-                    0,// desc extended image
+                    0, // desc extended image
                     new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
                             SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
@@ -209,7 +209,7 @@ public class MkrSciBleSensorSpec extends ExternalSensorSpec {
                     R.string.sensor_desc_short_mkrsci_current, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
-                    0,// desc extended image
+                    0, // desc extended image
                     new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
                             SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
@@ -270,7 +270,7 @@ public class MkrSciBleSensorSpec extends ExternalSensorSpec {
                     0,
                     0,
                     0,
-                    new SensorAnimationBehavior(R.drawable.mkrsci_accy_level_drawable,
+                    new SensorAnimationBehavior(R.drawable.mkrsci_accz_level_drawable,
                             SensorAnimationBehavior.TYPE_ACCELEROMETER_SCALE_ROTATES),
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL,
                     null
