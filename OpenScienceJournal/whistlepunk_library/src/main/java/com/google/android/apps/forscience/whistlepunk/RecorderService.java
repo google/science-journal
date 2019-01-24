@@ -16,17 +16,22 @@
 
 package com.google.android.apps.forscience.whistlepunk;
 
+import android.annotation.TargetApi;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.google.android.apps.forscience.whistlepunk.review.RunReviewActivity;
 import com.google.android.apps.forscience.whistlepunk.review.RunReviewFragment;
+
+import static android.app.NotificationChannel.DEFAULT_CHANNEL_ID;
 
 /**
  * Foreground service that keeps our application alive while recorders are recording.
@@ -34,6 +39,9 @@ import com.google.android.apps.forscience.whistlepunk.review.RunReviewFragment;
  * For now, this service doesn't really hold any data, they are still in AppSingleton.
  */
 public class RecorderService extends Service implements IRecorderService {
+
+    private static final String RECORDING_NOTIFICATION_CHANNEL_ID = "recording";
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -50,14 +58,19 @@ public class RecorderService extends Service implements IRecorderService {
     public void beginServiceRecording(String experimentName, Intent launchIntent) {
         clearRecordingCompletedNotification(getApplicationContext());
         final PendingIntent pi = PendingIntent.getActivity(this, 1, launchIntent, 0);
-        startForeground(NotificationIds.RECORDER_SERVICE,
-                new Notification.Builder(this)
-                        .setContentTitle(getString(R.string.service_notification_content_title))
-                        .setContentText(getString(R.string.service_notification_content_text))
-                        .setSubText(experimentName)
-                        .setSmallIcon(R.drawable.ic_notification_24dp)
-                        .setContentIntent(pi)
-                        .build());
+        final Notification.Builder nb;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotificationChannel();
+            nb = new Notification.Builder(this, RECORDING_NOTIFICATION_CHANNEL_ID);
+        } else {
+            nb = new Notification.Builder(this);
+        }
+        nb.setContentTitle(getString(R.string.service_notification_content_title))
+                .setContentText(getString(R.string.service_notification_content_text))
+                .setSubText(experimentName)
+                .setSmallIcon(R.drawable.ic_notification_24dp)
+                .setContentIntent(pi);
+        startForeground(NotificationIds.RECORDER_SERVICE, nb.build());
         WhistlePunkApplication.getPerfTrackerProvider(getApplicationContext())
                 .recordBatterySnapshotOnForegroundServiceStart();
     }
@@ -116,5 +129,14 @@ public class RecorderService extends Service implements IRecorderService {
     private static void clearNotification(Context context, int notificationId) {
         ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE))
                 .cancel(notificationId);
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private void createNotificationChannel() {
+        NotificationChannel channel = new NotificationChannel(RECORDING_NOTIFICATION_CHANNEL_ID,
+                getString(R.string.service_notification_content_text),
+                NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
     }
 }
