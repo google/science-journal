@@ -234,6 +234,9 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
             case GoosciIcon.IconPath.LEGACY_ANDROID_BLE:
                 return SensorTypeProvider.getSensorAppearance(Integer.valueOf(iconPath.pathString),
                         "");
+            case GoosciIcon.IconPath.MKRSCI_ANDROID_BLE:
+                return MkrSciBleSensorAppearance.get(iconPath.pathString);
+            // TODO
         }
         return null;
     }

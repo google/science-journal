@@ -35,6 +35,9 @@ message IconPath {
         // TODO: replace with better system
         LEGACY_ANDROID_BLE = 1;
 
+        // Arduino MkrSci path type. The path string is sensor_id:handler_id.
+        MKRSCI_ANDROID_BLE = 2;
+
         // TODO: When we have local storage of custom sensor icons, add another type here.
     }
 
