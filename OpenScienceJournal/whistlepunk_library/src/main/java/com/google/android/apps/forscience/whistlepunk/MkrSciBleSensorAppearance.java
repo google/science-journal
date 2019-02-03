@@ -48,7 +48,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                         sensorId,
                         handlerId,
                         R.string.input_1, // name
-                        R.drawable.ic_sensor_temperature_white_24dp, // icon
+                        R.drawable.ic_sensor_input_1_white_24dp, // icon
                         R.string.temperature_c_units, // units
                         0, // desc short
                         0, // desc extended 1st part
@@ -65,7 +65,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                         sensorId,
                         handlerId,
                         R.string.input_1, // name
-                        R.drawable.ic_sensor_temperature_white_24dp, // icon
+                        R.drawable.ic_sensor_input_1_white_24dp, // icon
                         R.string.temperature_f_units, // units
                         0, // desc short
                         0, // desc extended 1st part
@@ -82,7 +82,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                         sensorId,
                         handlerId,
                         R.string.input_1, // name
-                        R.drawable.ic_sensor_light_white_24dp, // icon
+                        R.drawable.ic_sensor_input_1_white_24dp, // icon
                         R.string.ambient_light_units, // units
                         0, // desc short
                         0, // desc extended 1st part
@@ -117,7 +117,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                         sensorId,
                         handlerId,
                         R.string.input_2, // name
-                        R.drawable.ic_sensor_light_white_24dp, // icon
+                        R.drawable.ic_sensor_input_2_white_24dp, // icon
                         R.string.ambient_light_units, // units
                         0, // desc short
                         0, // desc extended 1st part
