@@ -144,7 +144,7 @@ public class InputDeviceSpec extends ExternalSensorSpec {
                 }
                 if (Objects.equals(getProviderType(), MkrSciBleDeviceSpec.TYPE)) {
                     return context.getResources()
-                            .getDrawable(R.drawable.ic_arduino_device);
+                            .getDrawable(R.drawable.ic_arduino_device_white_24dp);
                 }
                 return null;
             }

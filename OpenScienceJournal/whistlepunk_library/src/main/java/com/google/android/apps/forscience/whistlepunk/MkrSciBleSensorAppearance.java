@@ -48,7 +48,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                         sensorId,
                         handlerId,
                         R.string.input_1, // name
-                        R.drawable.ic_sensor_input_1_white_24dp, // icon
+                        R.drawable.ic_sensor_mkrsci_temperature_white_24dp, // icon
                         R.string.temperature_c_units, // units
                         0, // desc short
                         0, // desc extended 1st part
@@ -65,7 +65,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                         sensorId,
                         handlerId,
                         R.string.input_1, // name
-                        R.drawable.ic_sensor_input_1_white_24dp, // icon
+                        R.drawable.ic_sensor_mkrsci_temperature_white_24dp, // icon
                         R.string.temperature_f_units, // units
                         0, // desc short
                         0, // desc extended 1st part
@@ -82,14 +82,14 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                         sensorId,
                         handlerId,
                         R.string.input_1, // name
-                        R.drawable.ic_sensor_input_1_white_24dp, // icon
+                        R.drawable.ic_sensor_mkrsci_light_white_24dp, // icon
                         R.string.ambient_light_units, // units
                         0, // desc short
                         0, // desc extended 1st part
                         0, // desc extended 2nd part
                         0, // desc extended image
                         new SensorAnimationBehavior(
-                                R.drawable.ambient_level_drawable,
+                                R.drawable.mkrsci_light_level_drawable,
                                 SensorAnimationBehavior.TYPE_RELATIVE_SCALE),
                         BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
                         null // sensor id
@@ -99,7 +99,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     sensorId,
                     handlerId,
                     R.string.input_1, // name
-                    R.drawable.ic_sensor_input_1_white_24dp, // icon
+                    R.drawable.ic_sensor_mkrsci_input_1_white_24dp, // icon
                     0, // units
                     0, // desc short
                     0, // desc extended 1st part
@@ -117,14 +117,14 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                         sensorId,
                         handlerId,
                         R.string.input_2, // name
-                        R.drawable.ic_sensor_input_2_white_24dp, // icon
+                        R.drawable.ic_sensor_mkrsci_light_white_24dp, // icon
                         R.string.ambient_light_units, // units
                         0, // desc short
                         0, // desc extended 1st part
                         0, // desc extended 2nd part
                         0, // desc extended image
                         new SensorAnimationBehavior(
-                                R.drawable.ambient_level_drawable,
+                                R.drawable.mkrsci_light_level_drawable,
                                 SensorAnimationBehavior.TYPE_RELATIVE_SCALE),
                         BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
                         null // sensor id
@@ -134,7 +134,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     sensorId,
                     handlerId,
                     R.string.input_2, // name
-                    R.drawable.ic_sensor_input_2_white_24dp, // icon
+                    R.drawable.ic_sensor_mkrsci_input_2_white_24dp, // icon
                     0, // units
                     0, // desc short
                     0, // desc extended 1st part
@@ -151,7 +151,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     sensorId,
                     handlerId,
                     R.string.input_3, // name
-                    R.drawable.ic_sensor_input_3_white_24dp, // icon
+                    R.drawable.ic_sensor_mkrsci_input_3_white_24dp, // icon
                     0, // units
                     0, // desc short
                     0, // desc extended 1st part
@@ -168,13 +168,13 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     sensorId,
                     handlerId,
                     R.string.voltage, // name
-                    R.drawable.ic_sensor_voltage_white_24dp, // icon
+                    R.drawable.ic_sensor_mkrsci_voltage_white_24dp, // icon
                     R.string.voltage_units, // units
                     R.string.sensor_desc_short_mkrsci_voltage, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
                     0,// desc extended image
-                    new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
+                    new SensorAnimationBehavior(R.drawable.mkrsci_voltage_level_drawable,
                             SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
                     null // sensor id
@@ -185,13 +185,13 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     sensorId,
                     handlerId,
                     R.string.current, // name
-                    R.drawable.ic_sensor_current_white_24dp, // icon
+                    R.drawable.ic_sensor_mkrsci_current_white_24dp, // icon
                     R.string.current_units, // units
                     R.string.sensor_desc_short_mkrsci_current, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
                     0, // desc extended image
-                    new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
+                    new SensorAnimationBehavior(R.drawable.mkrsci_current_level_drawable,
                             SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
                     null // sensor id
@@ -202,13 +202,13 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     sensorId,
                     handlerId,
                     R.string.resistance, // name
-                    R.drawable.ic_sensor_resistance_white_24dp, // icon
+                    R.drawable.ic_sensor_mkrsci_resistance_white_24dp, // icon
                     R.string.resistance_units, // units
                     R.string.sensor_desc_short_mkrsci_resistance, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
                     0,// desc extended image
-                    new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
+                    new SensorAnimationBehavior(R.drawable.mkrsci_resistance_level_drawable,
                             SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
                     null // sensor id
@@ -219,7 +219,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     sensorId,
                     handlerId,
                     R.string.acc_x,
-                    R.drawable.ic_sensor_acc_x_white_24dp,
+                    R.drawable.ic_sensor_mkrsci_acc_x_white_24dp,
                     R.string.acc_units,
                     R.string.sensor_desc_short_mkrsci_acc,
                     0,
@@ -236,7 +236,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     sensorId,
                     handlerId,
                     R.string.acc_y,
-                    R.drawable.ic_sensor_acc_y_white_24dp,
+                    R.drawable.ic_sensor_mkrsci_acc_y_white_24dp,
                     R.string.acc_units,
                     R.string.sensor_desc_short_mkrsci_acc,
                     0,
@@ -253,7 +253,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     sensorId,
                     handlerId,
                     R.string.acc_z,
-                    R.drawable.ic_sensor_acc_z_white_24dp,
+                    R.drawable.ic_sensor_mkrsci_acc_z_white_24dp,
                     R.string.acc_units,
                     R.string.sensor_desc_short_mkrsci_acc,
                     0,
@@ -270,13 +270,13 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     sensorId,
                     handlerId,
                     R.string.linear_accelerometer,
-                    R.drawable.ic_sensor_linacc_white_24dp,
+                    R.drawable.ic_sensor_mkrsci_acc_linear_white_24dp,
                     R.string.acc_units,
                     R.string.sensor_desc_short_mkrsci_acc,
                     0,
                     0,
                     0,
-                    new SensorAnimationBehavior(R.drawable.linacc_level_drawable,
+                    new SensorAnimationBehavior(R.drawable.mkrsci_acclin_level_drawable,
                             SensorAnimationBehavior.TYPE_POSITIVE_RELATIVE_SCALE),
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL,
                     null
@@ -287,13 +287,13 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     sensorId,
                     handlerId,
                     R.string.gyr_x, // name
-                    R.drawable.ic_sensor_gyr_x_white_24dp, // icon
+                    R.drawable.ic_sensor_mkrsci_gyr_x_white_24dp, // icon
                     R.string.gyr_units, // units
                     R.string.sensor_desc_short_mkrsci_gyr, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
                     0,// desc extended image
-                    new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
+                    new SensorAnimationBehavior(R.drawable.mkrsci_gyrx_level_drawable,
                             SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
                     null // sensor id
@@ -304,13 +304,13 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     sensorId,
                     handlerId,
                     R.string.gyr_y, // name
-                    R.drawable.ic_sensor_gyr_y_white_24dp, // icon
+                    R.drawable.ic_sensor_mkrsci_gyr_y_white_24dp, // icon
                     R.string.gyr_units, // units
                     R.string.sensor_desc_short_mkrsci_gyr, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
                     0,// desc extended image
-                    new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
+                    new SensorAnimationBehavior(R.drawable.mkrsci_gyry_level_drawable,
                             SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
                     null // sensor id
@@ -321,13 +321,13 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     sensorId,
                     handlerId,
                     R.string.gyr_z, // name
-                    R.drawable.ic_sensor_gyr_z_white_24dp, // icon
+                    R.drawable.ic_sensor_mkrsci_gyr_z_white_24dp, // icon
                     R.string.gyr_units, // units
                     R.string.sensor_desc_short_mkrsci_gyr, // desc short
                     0, // desc extended 1st part
                     0, // desc extended 2nd part
                     0,// desc extended image
-                    new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
+                    new SensorAnimationBehavior(R.drawable.mkrsci_gyrz_level_drawable,
                             SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
                     null // sensor id
@@ -338,18 +338,17 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     sensorId,
                     handlerId,
                     R.string.magnetic_field_strength,
-                    R.drawable.ic_sensor_magnet_white_24dp,
+                    R.drawable.ic_sensor_mkrsci_magnetometer_white_24dp,
                     R.string.magnetic_strength_units,
                     R.string.sensor_desc_short_mkrsci_magnetometer, // desc short
                     0,
                     0,
                     0,
                     new SensorAnimationBehavior(
-                            R.drawable.magnetometer_level_drawable,
+                            R.drawable.mkrsci_magnetometer_level_drawable,
                             SensorAnimationBehavior.TYPE_POSITIVE_RELATIVE_SCALE),
                     BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, null);
         }
-        // TODO build a default one
         return null;
     }
 
