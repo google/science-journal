@@ -5,7 +5,7 @@ import com.google.android.apps.forscience.whistlepunk.devicemanager.SensorTypePr
 
 public class MkrSciBleDeviceSpec extends ExternalSensorSpec {
 
-    public static final String TYPE = "mkrsci_bluetooth_le";
+    public static final String TYPE = "bluetooth_le";
 
     private String mAddress;
 

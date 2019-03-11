@@ -56,7 +56,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                         0, // desc extended image
                         new SensorAnimationBehavior(R.drawable.mkrsci_temperature_level_drawable,
                                 SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
-                        BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
+                        2, // points after decimal
                         null // sensor id
                 );
             }
@@ -73,7 +73,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                         0, // desc extended image
                         new SensorAnimationBehavior(R.drawable.mkrsci_temperature_level_drawable,
                                 SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
-                        BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
+                        2, // points after decimal
                         null // sensor id
                 );
             }
@@ -91,7 +91,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                         new SensorAnimationBehavior(
                                 R.drawable.mkrsci_light_level_drawable,
                                 SensorAnimationBehavior.TYPE_RELATIVE_SCALE),
-                        BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
+                        0, // points after decimal
                         null // sensor id
                 );
             }
@@ -107,7 +107,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     0, // desc extended image
                     new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
                             SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
-                    BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
+                    0, // points after decimal
                     null // sensor id
             );
         }
@@ -126,7 +126,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                         new SensorAnimationBehavior(
                                 R.drawable.mkrsci_light_level_drawable,
                                 SensorAnimationBehavior.TYPE_RELATIVE_SCALE),
-                        BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
+                        0, // points after decimal
                         null // sensor id
                 );
             }
@@ -142,7 +142,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     0, // desc extended image
                     new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
                             SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
-                    BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
+                    0, // points after decimal
                     null // sensor id
             );
         }
@@ -159,7 +159,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     0, // desc extended image
                     new SensorAnimationBehavior(R.drawable.mkrsci_level_drawable,
                             SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
-                    BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
+                    0, // points after decimal
                     null // sensor id
             );
         }
@@ -176,7 +176,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     0,// desc extended image
                     new SensorAnimationBehavior(R.drawable.mkrsci_voltage_level_drawable,
                             SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
-                    BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
+                    2, // points after decimal
                     null // sensor id
             );
         }
@@ -193,7 +193,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     0, // desc extended image
                     new SensorAnimationBehavior(R.drawable.mkrsci_current_level_drawable,
                             SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
-                    BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
+                    2, // points after decimal
                     null // sensor id
             );
         }
@@ -210,7 +210,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     0,// desc extended image
                     new SensorAnimationBehavior(R.drawable.mkrsci_resistance_level_drawable,
                             SensorAnimationBehavior.TYPE_POSITIVE_RELATIVE_SCALE), // animation
-                    3,//BuiltInSensorAppearance.MAX_POINTS_AFTER_DECIMAL, // points after decimal
+                    2,//BuiltInSensorAppearance.MAX_POINTS_AFTER_DECIMAL, // points after decimal
                     null // sensor id
             );
         }
@@ -227,7 +227,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     0,
                     new SensorAnimationBehavior(R.drawable.mkrsci_accx_level_drawable,
                             SensorAnimationBehavior.TYPE_ACCELEROMETER_SCALE_ROTATES),
-                    BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL,
+                    2,
                     null
             );
         }
@@ -244,7 +244,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     0,
                     new SensorAnimationBehavior(R.drawable.mkrsci_accy_level_drawable,
                             SensorAnimationBehavior.TYPE_ACCELEROMETER_SCALE_ROTATES),
-                    BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL,
+                    2,
                     null
             );
         }
@@ -261,7 +261,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     0,
                     new SensorAnimationBehavior(R.drawable.mkrsci_accz_level_drawable,
                             SensorAnimationBehavior.TYPE_ACCELEROMETER_SCALE_ROTATES),
-                    BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL,
+                    2,
                     null
             );
         }
@@ -278,7 +278,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     0,
                     new SensorAnimationBehavior(R.drawable.mkrsci_acclin_level_drawable,
                             SensorAnimationBehavior.TYPE_POSITIVE_RELATIVE_SCALE),
-                    BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL,
+                    2,
                     null
             );
         }
@@ -295,7 +295,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     0,// desc extended image
                     new SensorAnimationBehavior(R.drawable.mkrsci_gyrx_level_drawable,
                             SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
-                    BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
+                    2, // points after decimal
                     null // sensor id
             );
         }
@@ -312,7 +312,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     0,// desc extended image
                     new SensorAnimationBehavior(R.drawable.mkrsci_gyry_level_drawable,
                             SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
-                    BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
+                    2, // points after decimal
                     null // sensor id
             );
         }
@@ -329,7 +329,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     0,// desc extended image
                     new SensorAnimationBehavior(R.drawable.mkrsci_gyrz_level_drawable,
                             SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
-                    BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
+                    2, // points after decimal
                     null // sensor id
             );
         }
@@ -347,7 +347,7 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     new SensorAnimationBehavior(
                             R.drawable.mkrsci_magnetometer_level_drawable,
                             SensorAnimationBehavior.TYPE_POSITIVE_RELATIVE_SCALE),
-                    BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, null);
+                    2, null);
         }
         return null;
     }

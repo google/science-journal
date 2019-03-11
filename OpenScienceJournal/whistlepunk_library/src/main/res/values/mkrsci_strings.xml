@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="arduino_boards" translatable="false">Arduino Boards</string>
+
     <string name="input_1" translatable="false">Input 1</string>
     <string name="input_2" translatable="false">Input 2</string>
     <string name="input_3" translatable="false">Input 3</string>
