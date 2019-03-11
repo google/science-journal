@@ -196,7 +196,6 @@ public class MkrSciBleManager {
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 mReadyForAction = false;
                 gatt.disconnect();
-                // TODO handle disconnection events
             }
         }
 
@@ -266,6 +265,11 @@ public class MkrSciBleManager {
                         } else if (values[i] < MIN_VALUE) {
                             values[i] = MIN_VALUE;
                         }
+                        /*
+                        final double MAX_VALUE = 1000000D;
+                        final double MIN_VALUE = -1000000D;
+                        values[i] = MIN_VALUE + (Math.random() * (((double) MAX_VALUE) - ((double) MIN_VALUE)));
+                        */
                     }
                     // delivering to listener(s)
                     synchronized (mListeners) {

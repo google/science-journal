@@ -93,19 +93,19 @@ public class MkrSciBleSensor extends ScalarSensor {
                 break;
             case SENSOR_RESISTANCE:
                 mCharacteristic = MkrSciBleManager.RESISTANCE_UUID;
-                mValueHandler = new SimpleValueHandler(0);
+                mValueHandler = new ResistanceValueHandler(0);
                 break;
             case SENSOR_ACCELEROMETER_X:
                 mCharacteristic = MkrSciBleManager.ACCELEROMETER_UUID;
-                mValueHandler = new AccelerometerValueHandler(0);
+                mValueHandler = new SimpleValueHandler(0);
                 break;
             case SENSOR_ACCELEROMETER_Y:
                 mCharacteristic = MkrSciBleManager.ACCELEROMETER_UUID;
-                mValueHandler = new AccelerometerValueHandler(1);
+                mValueHandler = new SimpleValueHandler(1);
                 break;
             case SENSOR_ACCELEROMETER_Z:
                 mCharacteristic = MkrSciBleManager.ACCELEROMETER_UUID;
-                mValueHandler = new AccelerometerValueHandler(2);
+                mValueHandler = new SimpleValueHandler(2);
                 break;
             case SENSOR_LINEAR_ACCELEROMETER:
                 mCharacteristic = MkrSciBleManager.ACCELEROMETER_UUID;
@@ -166,6 +166,7 @@ public class MkrSciBleSensor extends ScalarSensor {
             }
         };
     }
+
 
     private interface ValueHandler {
         void handle(StreamConsumer c, long ts, double[] values);
@@ -232,19 +233,28 @@ public class MkrSciBleSensor extends ScalarSensor {
         }
     }
 
-    private static class AccelerometerValueHandler implements ValueHandler {
+    private static class ResistanceValueHandler implements ValueHandler {
+
         private int index;
 
-        private AccelerometerValueHandler(int index) {
+        private ResistanceValueHandler(int index) {
             this.index = index;
         }
 
         @Override
         public void handle(StreamConsumer c, long ts, double[] values) {
             if (values.length > index) {
-                c.addData(ts, values[index] * 9.80665d);
+                double v = values[index] / 1000D;
+                if (v > 1000D) {
+                    c.addData(ts, 1000D);
+                } else if (v < 0D) {
+                    c.addData(ts, 0D);
+                } else {
+                    c.addData(ts, v);
+                }
             }
         }
+
     }
 
     private static class VectorValueHandler implements ValueHandler {

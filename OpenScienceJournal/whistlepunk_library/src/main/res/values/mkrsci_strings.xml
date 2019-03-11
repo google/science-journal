@@ -14,7 +14,7 @@
     <string name="temperature_c_units" translatable="false">\u00B0C</string>
     <string name="temperature_f_units" translatable="false">\u00B0F</string>
     <string name="current_units" translatable="false">A</string>
-    <string name="resistance_units" translatable="false">\u03A9</string>
+    <string name="resistance_units" translatable="false">k\u03A9</string>
     <string name="gyr_units" translatable="false">\u00B0/s</string>
 
     <string name="mkrsci_input_sensor_raw" translatable="false">Raw</string>

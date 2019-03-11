@@ -209,8 +209,8 @@ public class MkrSciBleSensorAppearance extends BuiltInSensorAppearance {
                     0, // desc extended 2nd part
                     0,// desc extended image
                     new SensorAnimationBehavior(R.drawable.mkrsci_resistance_level_drawable,
-                            SensorAnimationBehavior.TYPE_RELATIVE_SCALE), // animation
-                    BuiltInSensorAppearance.DEFAULT_POINTS_AFTER_DECIMAL, // points after decimal
+                            SensorAnimationBehavior.TYPE_POSITIVE_RELATIVE_SCALE), // animation
+                    3,//BuiltInSensorAppearance.MAX_POINTS_AFTER_DECIMAL, // points after decimal
                     null // sensor id
             );
         }
