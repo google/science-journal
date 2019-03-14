@@ -85,7 +85,7 @@ public class PictureUtils {
             File photoFile = PictureUtils.createImageFile(context, experimentId, uuid);
             if (photoFile != null) {
                 Uri contentUri = FileProvider.getUriForFile(context,
-                        "com.google.android.apps.forscience.whistlepunk", photoFile);
+                        context.getPackageName(), photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, contentUri);
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                     // Needed to avoid security exception on KitKat.
