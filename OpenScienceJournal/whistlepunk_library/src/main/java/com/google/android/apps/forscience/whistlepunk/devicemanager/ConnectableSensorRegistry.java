@@ -17,7 +17,6 @@ package com.google.android.apps.forscience.whistlepunk.devicemanager;
 
 import android.support.annotation.NonNull;
 import android.util.ArrayMap;
-import android.util.Log;
 
 import com.google.android.apps.forscience.javalib.Consumer;
 import com.google.android.apps.forscience.javalib.Delay;
@@ -89,11 +88,11 @@ public class ConnectableSensorRegistry {
 
     // TODO: reduce parameter list?
     public ConnectableSensorRegistry(DataController dataController,
-                                     Map<String, SensorDiscoverer> discoverers, DevicesPresenter presenter,
-                                     Scheduler scheduler, Clock clock,
-                                     DeviceOptionsListener optionsListener,
-                                     DeviceRegistry deviceRegistry, SensorAppearanceProvider appearanceProvider,
-                                     UsageTracker usageTracker, ConnectableSensor.Connector connector) {
+            Map<String, SensorDiscoverer> discoverers, DevicesPresenter presenter,
+            Scheduler scheduler, Clock clock,
+            DeviceOptionsListener optionsListener,
+            DeviceRegistry deviceRegistry, SensorAppearanceProvider appearanceProvider,
+            UsageTracker usageTracker, ConnectableSensor.Connector connector) {
         mDataController = dataController;
         mDiscoverers = discoverers;
         mProviders = AppSingleton.buildProviderMap(mDiscoverers);
@@ -122,7 +121,7 @@ public class ConnectableSensorRegistry {
                                     @Override
                                     public void success(Success value) {
                                         if (sensor.shouldShowOptionsOnConnect()
-                                                && settings != null) {
+                                            && settings != null) {
                                             mPresenter.showSensorOptions(mExperimentId,
                                                     sensor.getConnectedSensorId(), settings);
                                         }
@@ -149,7 +148,7 @@ public class ConnectableSensorRegistry {
     }
 
     private void onMyDevicesLoaded(List<InputDeviceSpec> myDevices, final boolean clearSensorCache,
-                                   final SensorRegistry sr) {
+            final SensorRegistry sr) {
         Preconditions.checkNotNull(sr);
         for (final InputDeviceSpec device : myDevices) {
             mDeviceRegistry.addDevice(device);
@@ -175,7 +174,7 @@ public class ConnectableSensorRegistry {
                     }
 
                     private void addBuiltInSensors(ExperimentSensors sensors,
-                                                   List<ConnectableSensor> allSensors) {
+                            List<ConnectableSensor> allSensors) {
                         for (String sensorId : sr.getBuiltInSources()) {
                             allSensors.add(mConnector.builtIn(sensorId,
                                     !sensors.getExcludedInternalSensorIds().contains(sensorId)));
@@ -183,7 +182,7 @@ public class ConnectableSensorRegistry {
                     }
 
                     private void addExternalSensors(ExperimentSensors sensors,
-                                                    List<ConnectableSensor> allSensors) {
+                            List<ConnectableSensor> allSensors) {
                         for (ConnectableSensor sensor : sensors.getExternalSensors()) {
                             boolean isExternal = sensor.getSpec() != null;
                             if (isExternal) {
@@ -195,7 +194,7 @@ public class ConnectableSensorRegistry {
     }
 
     private void setPairedAndStartScanning(List<ConnectableSensor> sensors,
-                                           boolean clearSensorCache, final SensorRegistry sr) {
+            boolean clearSensorCache, final SensorRegistry sr) {
         boolean atLeastOneWasPaired = setPairedSensors(sensors);
 
         // If we somehow had zero sensors when the experiment was loaded, add an
@@ -260,7 +259,7 @@ public class ConnectableSensorRegistry {
     }
 
     private void startScanning(final String providerKey, SensorDiscoverer discoverer,
-                               final TaskPool pool, final Set<String> keysSeen, final boolean startSpinners) {
+            final TaskPool pool, final Set<String> keysSeen, final boolean startSpinners) {
         SensorProvider provider = discoverer.getProvider();
         pool.addTask(providerKey);
 
@@ -325,7 +324,7 @@ public class ConnectableSensorRegistry {
     }
 
     private void onSensorFound(SensorDiscoverer.DiscoveredSensor ds,
-                               Set<String> availableKeysSeen) {
+            Set<String> availableKeysSeen) {
         ConnectableSensor sensor = mConnector.disconnected(ds.getSensorSpec());
         final String sensorKey = findSensorKey(sensor);
 
@@ -361,14 +360,14 @@ public class ConnectableSensorRegistry {
     }
 
     private void replaceSensorDataDuringScan(final String sensorKey, ConnectableSensor oldSensor,
-                                             final SensorDiscoverer.DiscoveredSensor newSensor) {
+            final SensorDiscoverer.DiscoveredSensor newSensor) {
         mSettingsIntents.put(sensorKey, newSensor.getSettingsInterface());
 
         // TODO: can we avoid translating here?
         ExternalSensorSpec newSpec =
                 ExternalSensorSpec.fromGoosciSpec(newSensor.getSensorSpec(), mProviders);
         if (!newSpec.isSameSensorAndSpec(oldSensor.getSpec())
-                && newSensor.shouldReplaceStoredSensor(oldSensor)) {
+            && newSensor.shouldReplaceStoredSensor(oldSensor)) {
             final String oldSensorId = oldSensor.getConnectedSensorId();
             DeviceOptionsViewController.maybeReplaceSensor(mDataController, mExperimentId,
                     oldSensorId, newSpec,
@@ -385,7 +384,7 @@ public class ConnectableSensorRegistry {
     }
 
     public static final boolean isSameSensorAndSpec(GoosciSensorSpec.SensorSpec a,
-                                                    GoosciSensorSpec.SensorSpec b) {
+            GoosciSensorSpec.SensorSpec b) {
         return MessageNano.messageNanoEquals(a, b);
     }
 
@@ -451,7 +450,7 @@ public class ConnectableSensorRegistry {
 
     @NonNull
     private String registerSensor(String key, ConnectableSensor sensor,
-                                  SensorDiscoverer.SettingsInterface settingsInterface) {
+            SensorDiscoverer.SettingsInterface settingsInterface) {
         if (key == null) {
             key = EXTERNAL_SENSOR_KEY_PREFIX + (mKeyNum++);
         }
@@ -468,7 +467,7 @@ public class ConnectableSensorRegistry {
      * @param onAdded             receives the connected ConnectableSensor that's been added to the
      */
     public void addSensorIfNecessary(String key, int numPairedBeforeThis,
-                                     final MaybeConsumer<ConnectableSensor> onAdded) {
+            final MaybeConsumer<ConnectableSensor> onAdded) {
         ConnectableSensor connectableSensor = getSensor(key);
 
         // TODO: probably shouldn't finish in these cases, instead go into sensor editing.
@@ -495,7 +494,7 @@ public class ConnectableSensorRegistry {
     }
 
     private void addSensorToCurrentExperiment(final ConnectableSensor sensor,
-                                              final MaybeConsumer<ConnectableSensor> onAdded) {
+            final MaybeConsumer<ConnectableSensor> onAdded) {
         mDataController.addSensorToExperiment(mExperimentId, sensor.getConnectedSensorId(),
                 new LoggingConsumer<Success>(TAG, "add sensor to experiment") {
                     @Override
@@ -554,7 +553,7 @@ public class ConnectableSensorRegistry {
     }
 
     public void forgetMyDevice(final InputDeviceSpec spec, final SensorRegistry sr,
-                               EnablementController enablementController) {
+            EnablementController enablementController) {
         Preconditions.checkNotNull(sr);
         List<String> idsToUnpair = Lists.newArrayList();
         for (Map.Entry<String, ConnectableSensor> entry : mSensors.entrySet()) {
@@ -580,7 +579,7 @@ public class ConnectableSensorRegistry {
     }
 
     private void removeSensorsFromExperiment(final List<String> idsToUnpair,
-                                             final LoggingConsumer<Success> onSuccess) {
+            final LoggingConsumer<Success> onSuccess) {
         if (idsToUnpair.isEmpty()) {
             onSuccess.success(Success.SUCCESS);
             return;
@@ -603,7 +602,7 @@ public class ConnectableSensorRegistry {
      *                   >1, then we add it and display it expanded so the user can choose.
      */
     public void addMyDevice(InputDeviceSpec spec, final SensorRegistry sr,
-                            final List<String> sensorKeys) {
+            final List<String> sensorKeys) {
         mDataController.addMyDevice(spec,
                 new LoggingConsumer<Success>(TAG, "Forgetting device") {
                     @Override
@@ -616,22 +615,22 @@ public class ConnectableSensorRegistry {
                             for (String key : sensorKeys) {
                                 addSensorIfNecessary(key, getPairedGroup().getSensorCount(),
                                         new LoggingConsumer<ConnectableSensor>(TAG, "add sensor to experiment") {
-                                    @Override
-                                    public void success(ConnectableSensor sensor) {
-                                        mDataController.removeSensorFromExperiment(
-                                                mExperimentId, sensor.getConnectedSensorId(),
-                                                new LoggingConsumer<Success>(TAG, "remove sensor from experiment") {
                                             @Override
-                                            public void success(Success value) {
-                                                sensor.setPaired(false);
-                                                counter[0]++;
-                                                if (counter[0] == length) {
-                                                    refresh(false, sr);
-                                                }
+                                            public void success(ConnectableSensor sensor) {
+                                                mDataController.removeSensorFromExperiment(
+                                                        mExperimentId, sensor.getConnectedSensorId(),
+                                                        new LoggingConsumer<Success>(TAG, "remove sensor from experiment") {
+                                                            @Override
+                                                            public void success(Success value) {
+                                                                sensor.setPaired(false);
+                                                                counter[0]++;
+                                                                if (counter[0] == length) {
+                                                                    refresh(false, sr);
+                                                                }
+                                                            }
+                                                        });
                                             }
                                         });
-                                    }
-                                });
                             }
                         }
                         refresh(false, sr);
