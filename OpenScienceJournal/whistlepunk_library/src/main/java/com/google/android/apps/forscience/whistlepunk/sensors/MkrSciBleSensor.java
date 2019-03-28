@@ -125,7 +125,7 @@ public class MkrSciBleSensor extends ScalarSensor {
                 break;
             case SENSOR_MAGNETOMETER:
                 mCharacteristic = MkrSciBleManager.MAGNETOMETER_UUID;
-                mValueHandler = new VectorValueHandler();
+                mValueHandler = new MagnetometerValueHandler();
                 break;
             default:
                 throw new RuntimeException("Unmanaged mkr sci ble sensor: " + sensorKind);
@@ -255,6 +255,18 @@ public class MkrSciBleSensor extends ScalarSensor {
             }
         }
 
+    }
+
+    private static class MagnetometerValueHandler implements ValueHandler {
+        @Override
+        public void handle(StreamConsumer c, long ts, double[] values) {
+            if (values.length < 3) {
+                return;
+            }
+            c.addData(ts, Math.sqrt(
+                    (values[0] * values[0]) + (values[1] * values[1]) + (values[2] * values[2]))
+                    * 100);
+        }
     }
 
     private static class VectorValueHandler implements ValueHandler {
