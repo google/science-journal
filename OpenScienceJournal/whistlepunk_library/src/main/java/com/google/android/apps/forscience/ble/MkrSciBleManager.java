@@ -21,6 +21,20 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * This is the entry point for subscribing a sensor and receiving data from an Arduino MKR SCI
+ * external board.
+ * <p>
+ * subscribe() and unsubscribe() methods allow to start and stop receiving data from the external
+ * board through a BLE connection. When subscribing, following information need to be passed:
+ *
+ * <ul>
+ * <li>external device address;</li>
+ * <li>characteristic (sensor) to be subscribed (valid ones are available as constants in
+ * the class);</li>
+ * <li>a listener for receiving values from subscribed characteristic.</li>
+ * </ul>
+ */
 public class MkrSciBleManager {
 
     public static final String SERVICE_UUID = "555a0001-0000-467a-9538-01f0652c74e8";
@@ -265,11 +279,6 @@ public class MkrSciBleManager {
                         } else if (values[i] < MIN_VALUE) {
                             values[i] = MIN_VALUE;
                         }
-                        /*
-                        final double MAX_VALUE = 1000000D;
-                        final double MIN_VALUE = -1000000D;
-                        values[i] = MIN_VALUE + (Math.random() * (((double) MAX_VALUE) - ((double) MIN_VALUE)));
-                        */
                     }
                     // delivering to listener(s)
                     synchronized (mListeners) {
@@ -362,6 +371,10 @@ public class MkrSciBleManager {
         UINT8, UINT16, UINT32, SFLOAT, SFLOAT_ARR
     }
 
+    /**
+     * Values read from a subscribed characteristic/sensor available in the external board are
+     * passed through implementations of this interface.
+     */
     public interface Listener {
         void onValuesUpdated(double[] values);
     }

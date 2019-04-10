@@ -16,6 +16,7 @@
 package com.google.android.apps.forscience.whistlepunk;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
@@ -39,19 +40,8 @@ public final class Appearances {
 
     public static String getSensorDisplayName(SensorAppearance appearance, Context context) {
         String units = appearance.getUnits(context);
-        /*
-        bad fix due to an Android bug: if format is "%1s (%2s)" and %2s value length is 1, it adds
-        an extra space before %2s. Example: %1s is "Current" and %2s is "A" result is "Current ( A)"
-         */
-        return TextUtils.isEmpty(units) ?
-                appearance.getName(context) : context.getResources().getString(
-                R.string.header_name_and_units).replace("%1s",
-                appearance.getName(context)).replace("%2s", units);
-        /*
-        previous implementation was was:
         return TextUtils.isEmpty(units) ?
                 appearance.getName(context) : String.format(context.getResources().getString(
                 R.string.header_name_and_units), appearance.getName(context), units);
-        */
     }
 }

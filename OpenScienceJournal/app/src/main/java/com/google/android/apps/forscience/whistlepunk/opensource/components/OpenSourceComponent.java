@@ -29,8 +29,8 @@ import com.google.android.apps.forscience.whistlepunk.opensource.modules.UsageTr
 import dagger.Component;
 
 @Component(modules = {FeatureDiscoveryModule.class, FeedbackModule.class, UsageTrackerModule.class,
-        NativeBleDiscovererModule.class, InputDeviceModule.class,
-        ScalarInputDiscoveryModule.class, ContextModule.class, PerfTrackerModule.class})
+        NativeBleDiscovererModule.class, InputDeviceModule.class, ScalarInputDiscoveryModule.class,
+        ContextModule.class, PerfTrackerModule.class})
 public interface OpenSourceComponent {
     void inject(WhistlePunkApplication app);
 }
