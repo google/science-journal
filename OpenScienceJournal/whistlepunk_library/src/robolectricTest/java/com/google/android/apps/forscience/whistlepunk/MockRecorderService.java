@@ -17,10 +17,9 @@ package com.google.android.apps.forscience.whistlepunk;
 
 import android.content.Context;
 import android.content.Intent;
-import android.test.mock.MockContext;
 
 /**
- * Stubb of RecorderService for tests.
+ * Stub of RecorderService for tests.
  */
 public class MockRecorderService extends RecorderService {
     MockRecorderService() {
@@ -28,7 +27,7 @@ public class MockRecorderService extends RecorderService {
 
     @Override
     public Context getApplicationContext() {
-        return new MockContext();
+        return new StubContext();
     }
 
     @Override

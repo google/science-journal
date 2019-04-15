@@ -154,6 +154,12 @@ public class MemoryMetadataManager implements MetaDataManager {
     }
 
     @Override
+    public void eraseSensorFromExperiment(String databaseTag, String experimentId) {
+        mExperimentIncluded.remove(experimentId, databaseTag);
+        mExperimentExcluded.remove(experimentId, databaseTag);
+    }
+
+    @Override
     public ExperimentSensors getExperimentSensors(String experimentId,
             Map<String, SensorProvider> providerMap,
             ConnectableSensor.Connector connector) {

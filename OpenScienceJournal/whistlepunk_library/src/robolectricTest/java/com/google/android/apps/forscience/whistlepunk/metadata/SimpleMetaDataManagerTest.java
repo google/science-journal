@@ -498,7 +498,7 @@ public class SimpleMetaDataManagerTest {
         mMetaDataManager.addSensorToExperiment(id2, "experimentId");
         mMetaDataManager.addSensorToExperiment(id3, "experimentId");
         List<ConnectableSensor> sensors = mMetaDataManager.getExperimentSensors(
-                "experimentId", providerMap, connector).getIncludedSensors();
+                "experimentId", providerMap, connector).getExternalSensors();
         assertEquals(id1, sensors.get(0).getConnectedSensorId());
         assertEquals(id2, sensors.get(1).getConnectedSensorId());
         assertEquals(id3, sensors.get(2).getConnectedSensorId());
@@ -513,7 +513,7 @@ public class SimpleMetaDataManagerTest {
         mMetaDataManager.addSensorToExperiment(id1, "experimentId");
         mMetaDataManager.addSensorToExperiment(id1, "experimentId");
         List<ConnectableSensor> sensors = mMetaDataManager.getExperimentSensors(
-                "experimentId", providerMap, connector).getIncludedSensors();
+                "experimentId", providerMap, connector).getExternalSensors();
         assertEquals(1, sensors.size());
     }
 
@@ -627,7 +627,7 @@ public class SimpleMetaDataManagerTest {
         ExperimentSensors sensors =
                 mMetaDataManager.getExperimentSensors("experimentId", providerMap,
                         new ConnectableSensor.Connector(providerMap));
-        List<ConnectableSensor> included = sensors.getIncludedSensors();
+        List<ConnectableSensor> included = sensors.getExternalSensors();
         Observable.fromIterable(included)
                   .test()
                   .assertValue(

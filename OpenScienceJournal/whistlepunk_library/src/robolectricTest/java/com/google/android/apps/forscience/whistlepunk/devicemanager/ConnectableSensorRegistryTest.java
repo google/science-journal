@@ -67,7 +67,7 @@ public class ConnectableSensorRegistryTest {
     private final Scheduler mScheduler = new MockScheduler();
     private final MemoryMetadataManager
             mMetadataManager = new MemoryMetadataManager();
-    private final DeviceOptionsDialog.DeviceOptionsListener
+    private final DeviceOptionsListener
             mOptionsListener = DeviceOptionsDialog.NULL_LISTENER;
     private final Map<String, SensorProvider> mProviderMap = new HashMap<>();
     private DeviceRegistry mDeviceRegistry = new DeviceRegistry(null);
@@ -423,7 +423,7 @@ public class ConnectableSensorRegistryTest {
 
         Map<String, ExternalSensorSpec> sensors = ConnectableSensor.makeMap(
                 mMetadataManager.getExperimentSensors(experiment.getExperimentId(),
-                        mProviderMap, s.makeConnector()).getIncludedSensors());
+                        mProviderMap, s.makeConnector()).getExternalSensors());
         ScalarInputSpec retrievedSpec = (ScalarInputSpec) sensors.values().iterator().next();
         SensorAppearance appearance = retrievedSpec.getSensorAppearance();
         assertEquals("newUnits", appearance.getUnits(null));

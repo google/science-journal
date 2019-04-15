@@ -20,6 +20,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import android.content.Context;
+import android.os.ParcelUuid;
 
 import com.google.android.apps.forscience.ble.DeviceDiscoverer;
 import com.google.android.apps.forscience.whistlepunk.AccumulatingConsumer;
@@ -50,7 +51,7 @@ public class NativeBleDiscovererTest {
             protected DeviceDiscoverer createDiscoverer(Context context) {
                 return new DeviceDiscoverer(context) {
                     @Override
-                    public void onStartScanning() {
+                    public void onStartScanning(ParcelUuid[] serviceUuids) {
                         int rssi = Arbitrary.integer();
                         addOrUpdateDevice(new WhistlepunkBleDevice() {
                             @Override
