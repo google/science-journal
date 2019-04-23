@@ -57,6 +57,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import io.reactivex.Observable;
 
@@ -364,7 +365,7 @@ public class SimpleMetaDataManagerTest {
         assertEquals(1, sensors.size());
         assertEquals(databaseTag, sensors.keySet().iterator().next());
 
-        mMetaDataManager.removeSensorFromExperiment(databaseTag, experiment.getExperimentId());
+        mMetaDataManager.eraseSensorFromExperiment(databaseTag, experiment.getExperimentId());
 
         sensors = ConnectableSensor.makeMap(
                 mMetaDataManager.getExperimentSensors(experiment.getExperimentId(),
@@ -622,16 +623,15 @@ public class SimpleMetaDataManagerTest {
 
     @Test
     public void testGetInternalSensors() {
-        mMetaDataManager.addSensorToExperiment("internalTag", "experimentId");
+        mMetaDataManager.removeSensorFromExperiment("internalTag", "experimentId");
         HashMap<String, SensorProvider> providerMap = new HashMap<>();
         ExperimentSensors sensors =
                 mMetaDataManager.getExperimentSensors("experimentId", providerMap,
                         new ConnectableSensor.Connector(providerMap));
-        List<ConnectableSensor> included = sensors.getExternalSensors();
-        Observable.fromIterable(included)
+        Set<String> excluded = sensors.getExcludedInternalSensorIds();
+        Observable.fromIterable(excluded)
                   .test()
-                  .assertValue(
-                          cs -> cs.isBuiltIn() && cs.getConnectedSensorId().equals("internalTag"));
+                  .assertValue(id -> id.equals("internalTag"));
     }
 
     @Test
