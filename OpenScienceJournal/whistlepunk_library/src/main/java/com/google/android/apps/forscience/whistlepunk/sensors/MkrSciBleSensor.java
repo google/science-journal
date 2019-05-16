@@ -97,19 +97,19 @@ public class MkrSciBleSensor extends ScalarSensor {
                 break;
             case SENSOR_ACCELEROMETER_X:
                 mCharacteristic = MkrSciBleManager.ACCELEROMETER_UUID;
-                mValueHandler = new AccelerometerValueHandler(0);
+                mValueHandler = new SimpleValueHandler(0);
                 break;
             case SENSOR_ACCELEROMETER_Y:
                 mCharacteristic = MkrSciBleManager.ACCELEROMETER_UUID;
-                mValueHandler = new AccelerometerValueHandler(1);
+                mValueHandler = new SimpleValueHandler(1);
                 break;
             case SENSOR_ACCELEROMETER_Z:
                 mCharacteristic = MkrSciBleManager.ACCELEROMETER_UUID;
-                mValueHandler = new AccelerometerValueHandler(2);
+                mValueHandler = new SimpleValueHandler(2);
                 break;
             case SENSOR_LINEAR_ACCELEROMETER:
                 mCharacteristic = MkrSciBleManager.ACCELEROMETER_UUID;
-                mValueHandler = new LinearAccelerometerValueHandler();
+                mValueHandler = new VectorValueHandler();
                 break;
             case SENSOR_GYROSCOPE_X:
                 mCharacteristic = MkrSciBleManager.GYROSCOPE_UUID;
@@ -230,36 +230,6 @@ public class MkrSciBleSensor extends ScalarSensor {
             if (values.length > index) {
                 c.addData(ts, ((values[index] * 3300d) / 1023d) * 0.5d);
             }
-        }
-    }
-
-    private static class AccelerometerValueHandler implements ValueHandler {
-        private int index;
-
-        private AccelerometerValueHandler(int index) {
-            this.index = index;
-        }
-
-        @Override
-        public void handle(StreamConsumer c, long ts, double[] values) {
-            if (values.length > index) {
-                c.addData(ts, values[index] * 10);
-            }
-        }
-    }
-
-    private static class LinearAccelerometerValueHandler implements ValueHandler {
-        @Override
-        public void handle(StreamConsumer c, long ts, double[] values) {
-            if (values.length < 3) {
-                return;
-            }
-            c.addData(ts,
-                    Math.sqrt((values[0] * values[0])
-                            + (values[1] * values[1])
-                            + (values[2] * values[2])
-                    ) * 10
-            );
         }
     }
 
