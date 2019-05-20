@@ -39,6 +39,8 @@ public class MkrSciBleManager {
 
     public static final String SERVICE_UUID = "555a0001-0000-467a-9538-01f0652c74e8";
 
+    private static final String VERSION_UUID = "555a0001-0001-467a-9538-01f0652c74e8";
+
     public static final String INPUT_1_UUID = "555a0001-2001-467a-9538-01f0652c74e8";
     public static final String INPUT_2_UUID = "555a0001-2002-467a-9538-01f0652c74e8";
     public static final String INPUT_3_UUID = "555a0001-2003-467a-9538-01f0652c74e8";
@@ -108,6 +110,8 @@ public class MkrSciBleManager {
 
         private boolean mBusy = false;
 
+        private long mFirmwareVersion = -1;
+
         private void disconnect() {
             if (mGatt != null) {
                 mGatt.disconnect();
@@ -124,6 +128,9 @@ public class MkrSciBleManager {
                     subscribe = true;
                 }
                 listeners.add(listener);
+                if (mFirmwareVersion > -1) {
+                    listener.onFirmwareVersion(mFirmwareVersion);
+                }
             }
             if (subscribe) {
                 enqueueGattAction(() -> {
@@ -219,8 +226,10 @@ public class MkrSciBleManager {
             if (service != null) {
                 mCharacteristics.addAll(service.getCharacteristics());
             }
-            mReadyForAction = true;
-            onGattActionCompleted();
+            BluetoothGattCharacteristic c = getCharacteristic(VERSION_UUID);
+            if (c != null) {
+                mGatt.readCharacteristic(c);
+            }
         }
 
         @Override
@@ -237,6 +246,34 @@ public class MkrSciBleManager {
         @Override
         public void onCharacteristicRead(
                 BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            final String uuid = characteristic.getUuid().toString();
+            if (VERSION_UUID.equals(uuid) && mFirmwareVersion == -1) {
+                final byte[] value = characteristic.getValue();
+                if (value.length == 4) {
+                    final ByteBuffer buffer = ByteBuffer.allocate(8);
+                    buffer.put((byte) 0);
+                    buffer.put((byte) 0);
+                    buffer.put((byte) 0);
+                    buffer.put((byte) 0);
+                    buffer.put(value[3]);
+                    buffer.put(value[2]);
+                    buffer.put(value[1]);
+                    buffer.put(value[0]);
+                    buffer.position(0);
+                    mFirmwareVersion = buffer.getLong();
+                    // delivering to listener(s)
+                    synchronized (mListeners) {
+                        for (List<Listener> listeners : mListeners.values()) {
+                            if (listeners != null) {
+                                for (Listener l : listeners) {
+                                    l.onFirmwareVersion(mFirmwareVersion);
+                                }
+                            }
+                        }
+                    }
+                }
+                mReadyForAction = true;
+            }
             onGattActionCompleted();
         }
 
@@ -376,7 +413,11 @@ public class MkrSciBleManager {
      * passed through implementations of this interface.
      */
     public interface Listener {
+
+        void onFirmwareVersion(long firmwareVersion);
+
         void onValuesUpdated(double[] values);
+
     }
 
     private static final double MAX_VALUE = 2000000000D;
