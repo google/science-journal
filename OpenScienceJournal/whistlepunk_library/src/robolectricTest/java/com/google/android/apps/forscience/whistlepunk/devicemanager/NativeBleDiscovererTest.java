@@ -15,10 +15,6 @@
  */
 package com.google.android.apps.forscience.whistlepunk.devicemanager;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import android.content.Context;
 import android.os.ParcelUuid;
 
@@ -30,12 +26,21 @@ import com.google.android.apps.forscience.whistlepunk.TestConsumers;
 import com.google.android.apps.forscience.whistlepunk.api.scalarinput.RecordingRunnable;
 import com.google.android.apps.forscience.whistlepunk.data.GoosciSensorSpec;
 import com.google.android.apps.forscience.whistlepunk.metadata.BleSensorSpec;
+import com.google.android.apps.forscience.whistlepunk.sensors.BleServiceSpec;
+import com.google.android.apps.forscience.whistlepunk.sensors.BluetoothSensor;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class)
@@ -62,6 +67,15 @@ public class NativeBleDiscovererTest {
                             @Override
                             public String getAddress() {
                                 return address;
+                            }
+
+                            @Override
+                            public List<String> getServiceUuids() {
+                                List<String> uuids = new ArrayList<>();
+                                for (BleServiceSpec spec : BluetoothSensor.SUPPORTED_SERVICES) {
+                                    uuids.add(spec.getServiceId().toString());
+                                }
+                                return uuids;
                             }
                         }, rssi);
                     }
@@ -115,7 +129,7 @@ public class NativeBleDiscovererTest {
                     }
                 };
         discoverer.startScanning(listener, TestConsumers.expectingSuccess());
-        assertEquals(15, sensorsSeen.seen.size());
+        assertEquals(1, sensorsSeen.seen.size());
         GoosciSensorSpec.SensorSpec sensor = sensorsSeen.seen.get(0).getSensorSpec();
         assertEquals(name, sensor.rememberedAppearance.name);
         assertEquals(address, sensor.info.address);

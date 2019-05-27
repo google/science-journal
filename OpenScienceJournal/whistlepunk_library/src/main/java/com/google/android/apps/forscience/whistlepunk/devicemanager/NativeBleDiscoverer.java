@@ -90,8 +90,7 @@ public class NativeBleDiscoverer implements SensorDiscoverer {
 
     private static final String SERVICE_ID = "com.google.android.apps.forscience.whistlepunk.ble";
 
-    private DeviceDiscoverer mLegacyDeviceDiscoverer;
-    private DeviceDiscoverer mMkrSciDeviceDiscoverer;
+    private DeviceDiscoverer mDeviceDiscoverer;
     private Runnable mOnScanDone;
     private Context mContext;
 
@@ -118,9 +117,8 @@ public class NativeBleDiscoverer implements SensorDiscoverer {
             }
         };
 
-        mLegacyDeviceDiscoverer = createDiscoverer(mContext);
-        mMkrSciDeviceDiscoverer = createDiscoverer(mContext);
-        final boolean canScan = mLegacyDeviceDiscoverer.canScan() && hasScanPermission();
+        mDeviceDiscoverer = createDiscoverer(mContext);
+        final boolean canScan = mDeviceDiscoverer.canScan() && hasScanPermission();
 
 
         listener.onServiceFound(new DiscoveredService() {
@@ -170,31 +168,26 @@ public class NativeBleDiscoverer implements SensorDiscoverer {
             return false;
         }
         List<ParcelUuid> uuids = new ArrayList<>();
+        uuids.add(ParcelUuid.fromString(MkrSciBleManager.SERVICE_UUID));
         for (BleServiceSpec spec : BluetoothSensor.SUPPORTED_SERVICES) {
             uuids.add(ParcelUuid.fromString(spec.getServiceId().toString()));
         }
-        mLegacyDeviceDiscoverer.startScanning(uuids.toArray(new ParcelUuid[0]), new DeviceDiscoverer.Callback() {
-            @Override
-            public void onDeviceFound(final DeviceDiscoverer.DeviceRecord record) {
-                onDeviceRecordFound(record, listener);
-            }
+        mDeviceDiscoverer.startScanning(uuids.toArray(new ParcelUuid[0]),
+                new DeviceDiscoverer.Callback() {
+                    @Override
+                    public void onDeviceFound(final DeviceDiscoverer.DeviceRecord record) {
+                        if (record.device.getServiceUuids()
+                                .contains(MkrSciBleManager.SERVICE_UUID)) {
+                            onMkrSciDeviceRecordFound(record, listener);
+                        } else {
+                            onDeviceRecordFound(record, listener);
+                        }
+                    }
 
-            @Override
-            public void onError(int error) {
-            }
-        });
-        mMkrSciDeviceDiscoverer.startScanning(new ParcelUuid[]{
-                ParcelUuid.fromString(MkrSciBleManager.SERVICE_UUID)
-        }, new DeviceDiscoverer.Callback() {
-            @Override
-            public void onDeviceFound(final DeviceDiscoverer.DeviceRecord record) {
-                onMkrSciDeviceRecordFound(record, listener);
-            }
-
-            @Override
-            public void onError(int error) {
-            }
-        });
+                    @Override
+                    public void onError(int error) {
+                    }
+                });
 
         return true;
     }
@@ -211,13 +204,9 @@ public class NativeBleDiscoverer implements SensorDiscoverer {
 
     @Override
     public void stopScanning() {
-        if (mLegacyDeviceDiscoverer != null) {
-            mLegacyDeviceDiscoverer.stopScanning();
-            mLegacyDeviceDiscoverer = null;
-        }
-        if (mMkrSciDeviceDiscoverer != null) {
-            mMkrSciDeviceDiscoverer.stopScanning();
-            mMkrSciDeviceDiscoverer = null;
+        if (mDeviceDiscoverer != null) {
+            mDeviceDiscoverer.stopScanning();
+            mDeviceDiscoverer = null;
         }
         if (mOnScanDone != null) {
             mOnScanDone.run();

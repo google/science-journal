@@ -20,6 +20,7 @@ import android.annotation.TargetApi;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
+import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
@@ -55,7 +56,18 @@ import java.util.List;
         }
 
         private void manageScanResult(ScanResult result) {
-            addOrUpdateDevice(new NativeDevice(result.getDevice()), result.getRssi());
+            List<String> serviceUuids = new ArrayList<>();
+            ScanRecord record = result.getScanRecord();
+            if (record != null) {
+                List<ParcelUuid> parcelUuids = record.getServiceUuids();
+                if (parcelUuids != null) {
+                    for (ParcelUuid uuid : parcelUuids) {
+                        serviceUuids.add(uuid.toString());
+                    }
+                }
+
+            }
+            addOrUpdateDevice(new NativeDevice(result.getDevice(), serviceUuids), result.getRssi());
         }
     };
 

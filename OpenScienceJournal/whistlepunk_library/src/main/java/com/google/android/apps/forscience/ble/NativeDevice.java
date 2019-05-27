@@ -19,11 +19,16 @@ import android.bluetooth.BluetoothDevice;
 
 import com.google.android.apps.forscience.whistlepunk.devicemanager.WhistlepunkBleDevice;
 
-public class NativeDevice implements WhistlepunkBleDevice {
-    private BluetoothDevice mDevice;
+import java.util.List;
 
-    public NativeDevice(BluetoothDevice device) {
+public class NativeDevice implements WhistlepunkBleDevice {
+
+    private BluetoothDevice mDevice;
+    private List<String> mServiceUuids;
+
+    public NativeDevice(BluetoothDevice device, List<String> serviceUuids) {
         mDevice = device;
+        mServiceUuids = serviceUuids;
     }
 
     @Override
@@ -34,5 +39,10 @@ public class NativeDevice implements WhistlepunkBleDevice {
     @Override
     public String getAddress() {
         return mDevice.getAddress();
+    }
+
+    @Override
+    public List<String> getServiceUuids() {
+        return mServiceUuids;
     }
 }

@@ -41,11 +41,16 @@ import java.util.concurrent.Executor;
     private BluetoothAdapter.LeScanCallback mCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
         public void onLeScan(final BluetoothDevice device, final int rssi, final byte[] scanRecord) {
-            if (isScienceSensor(parseUuids(scanRecord))) {
+            final List<UUID> uuids = parseUuids(scanRecord);
+            if (isScienceSensor(uuids)) {
                 mUiThreadExecutor.execute(new Runnable() {
                     @Override
                     public void run() {
-                        addOrUpdateDevice(new NativeDevice(device), rssi);
+                        List<String> serviceUuids = new ArrayList<>();
+                        for (UUID uuid : uuids) {
+                            serviceUuids.add(uuid.toString());
+                        }
+                        addOrUpdateDevice(new NativeDevice(device, serviceUuids), rssi);
                     }
                 });
             }
@@ -110,6 +115,9 @@ import java.util.concurrent.Executor;
         for (BleServiceSpec spec : BluetoothSensor.SUPPORTED_SERVICES) {
             for (UUID loopId : ids) {
                 if (loopId.compareTo(spec.getServiceId()) == 0) {
+                    return true;
+                }
+                if (loopId.toString().equals(MkrSciBleManager.SERVICE_UUID)) {
                     return true;
                 }
             }
