@@ -222,7 +222,7 @@ public class MkrSciBleManager {
 
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            BluetoothGattService service = gatt.getService(UUID.fromString(SERVICE_UUID));
+            BluetoothGattService service = mGatt.getService(UUID.fromString(SERVICE_UUID));
             if (service != null) {
                 mCharacteristics.addAll(service.getCharacteristics());
             }
@@ -388,7 +388,6 @@ public class MkrSciBleManager {
             final int size = value.length / 4;
             final double[] array = new double[size];
             final ByteBuffer buffer = ByteBuffer.allocate(4);
-            int c = 0;
             for (int i = 0; i < size; i++) {
                 final int offset = 4 * i;
                 buffer.position(0);
