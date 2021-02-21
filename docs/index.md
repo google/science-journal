@@ -38,5 +38,5 @@ equipped Arduinos.
 
 ## Have a question?
 
-* If your question is about Science Journal in general, please post on our [product forum](productforums.google.com/forum/#!forum/sciencejournal)
+* If your question is about Science Journal in general, please post on our [product forum](productforums.google.com/forum/#!forum/sciencejournal).
 * If you have specific code questions, feel free to use the GitHub issue tracker for our project.
