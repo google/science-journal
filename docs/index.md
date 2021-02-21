@@ -23,7 +23,7 @@ Several companies have used this API to work with external sensors.
 * [PocketLab](http://thepocketlab.com)
 * [Attys](http://www.attys.tech/)
 
-If you are use this API in your own app, please let us know so we can link to you here!
+If you want to use this API in your own app, please let us know so we can link to you here!
 
 Science Journal also works out of the box with our open source Science Journal sensor firmware. It runs on 2 models of BLE 
 equipped Arduinos.
